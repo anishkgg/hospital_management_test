@@ -1,5 +1,6 @@
 package com.hospital.entity;
 
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "doctor_table")
 @ToString(exclude = {"hospital", "appointments"})
 public class Doctor {
     private Long id;
@@ -22,6 +24,7 @@ public class Doctor {
     private String specialty;
     private String phone;
     private Hospital hospital;
+    private String licenseNumber;
     @Builder.Default
     private List<Appointment> appointments = new ArrayList<>();
 

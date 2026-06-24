@@ -11,4 +11,4 @@ import lombok.NoArgsConstructor;
 @Builder
 public record DoctorRequestDTO(Long id, String name,
                               String specialty, String phone,
-                              Long hospitalId) {}
+                              Long hospitalId, String licenseNumber) {}

@@ -6,4 +6,5 @@ import lombok.Builder;
 public record DoctorResponseDTO (Long id, String name,
                                 String specialty, String phone,
                                 Long hospitalId,
-                                String hospitalName) {}
+                                String hospitalName,
+                                String licenseNumber) {}
