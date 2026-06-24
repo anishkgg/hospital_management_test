@@ -1,3 +1,4 @@
+import com.hospital.config.DatabaseConnection;
 import com.hospital.dto.AppointmentDTO;
 import com.hospital.dto.DoctorDTO;
 import com.hospital.dto.HospitalDTO;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 public class Main {
     public static void main(String[] args) {
         System.out.println("=== Hospital Management Demo ===");
+        System.out.println("Database connected: " + DatabaseConnection.testConnection());
 
         // 1. Create a Hospital using Lombok Builder
         Hospital hospital = Hospital.builder()
