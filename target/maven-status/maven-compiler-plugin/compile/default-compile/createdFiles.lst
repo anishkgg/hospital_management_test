@@ -4,8 +4,8 @@ com/hospital/dto/AppointmentDTO.class
 com/hospital/entity/Hospital$HospitalBuilder.class
 com/hospital/entity/Doctor$DoctorBuilder.class
 com/hospital/dto/HospitalDTO.class
-Main.class
 com/hospital/entity/Appointment.class
 com/hospital/entity/Hospital.class
 com/hospital/entity/Doctor.class
 com/hospital/config/DatabaseConnection.class
+com/hospital/HospitalManagementApplication.class
