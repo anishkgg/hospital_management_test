@@ -16,9 +16,9 @@ public final class DatabaseConnection {
     public static Connection getConnection() throws SQLException {
         Properties properties = loadProperties();
 
-        String url = readConfig(properties, "db.url", "DB_URL");
-        String username = readConfig(properties, "db.username", "DB_USERNAME");
-        String password = readConfig(properties, "db.password", "DB_PASSWORD");
+        String url = readConfig(properties, "spring.datasource.url", "DB_URL");
+        String username = readConfig(properties, "spring.datasource.username", "DB_USERNAME");
+        String password = readConfig(properties, "spring.datasource.password", "DB_PASSWORD");
 
         return DriverManager.getConnection(url, username, password);
     }

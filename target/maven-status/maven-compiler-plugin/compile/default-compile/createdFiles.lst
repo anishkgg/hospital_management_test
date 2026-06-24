@@ -14,7 +14,6 @@ com/hospital/entity/Hospital$HospitalBuilder.class
 com/hospital/repository/HospitalRepository.class
 com/hospital/dto/requestDto/AppointmentRequestDTO$AppointmentRequestDTOBuilder.class
 com/hospital/entity/Doctor$DoctorBuilder.class
-com/hospital/Service/service.class
 com/hospital/entity/Hospital.class
 com/hospital/dto/requestDto/HospitalRequestDTO$HospitalRequestDTOBuilder.class
 com/hospital/dto/requestDto/HospitalRequestDTO.class
