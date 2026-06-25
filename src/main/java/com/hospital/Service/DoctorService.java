@@ -9,6 +9,10 @@ import com.hospital.repository.HospitalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.print.Doc;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class DoctorService {
     @Autowired
@@ -22,7 +26,7 @@ public class DoctorService {
             throw new IllegalArgumentException("Doctor is already exist");
         }
 
-        if(doctorRepository.existsByPhoneNumber(doctorRequestDTO.phone())) {
+        if(doctorRepository.existsByPhone(doctorRequestDTO.phone())) {
             throw new IllegalArgumentException("Phone Number Can not Same");
         }
 
@@ -48,5 +52,20 @@ public class DoctorService {
                 .hospitalName(hospital.getName())
                 .licenseNumber(savedDoctor.getLicenseNumber())
                 .build();
+    }
+
+    public List<DoctorResponseDTO> getAllDoctors () {
+        List<Doctor> doctors = doctorRepository.findAll();
+
+        return doctors.stream()
+                .map(doctor -> DoctorResponseDTO.builder()
+                        .id(doctor.getId())
+                        .name(doctor.getName())
+                        .specialty(doctor.getSpecialty())
+                        .phone(doctor.getPhone())
+                        .hospitalId(doctor.getHospital().getId())
+                        .hospitalName(doctor.getHospital().getName())
+                        .build())
+        .collect(Collectors.toList());
     }
 }

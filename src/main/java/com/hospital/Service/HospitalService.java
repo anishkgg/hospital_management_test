@@ -7,6 +7,10 @@ import com.hospital.repository.HospitalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class HospitalService {
 
@@ -36,5 +40,19 @@ public class HospitalService {
                 .city(saveHospital.getCity())
                 .build();
 
+    }
+
+    public List<HospitalResponseDTO> getAllHospitals() {
+        List<Hospital> hospitals = hospitalRepository.findAll(); // fetching from entity
+
+        return hospitals.stream()
+                .map(hospital -> HospitalResponseDTO.builder()
+                        .id(hospital.getId())
+                        .name(hospital.getName())
+                        .address(hospital.getAddress())
+                        .phone(hospital.getPhone())
+                        .city(hospital.getCity())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

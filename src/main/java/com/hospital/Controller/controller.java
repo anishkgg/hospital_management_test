@@ -9,10 +9,9 @@ import com.hospital.dto.responseDto.HospitalResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1")
@@ -34,5 +33,17 @@ public class controller {
     public ResponseEntity<HospitalResponseDTO> addHospital (@RequestBody HospitalRequestDTO hospitalRequestDTO) {
         HospitalResponseDTO createHospital = hospitalService.createHospital(hospitalRequestDTO);
         return new ResponseEntity<>(createHospital, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getAllDoctors")
+    public ResponseEntity<List<DoctorResponseDTO>> getAllDoctors() {
+        List<DoctorResponseDTO> doctors = doctorService.getAllDoctors();
+        return ResponseEntity.ok(doctors);
+    }
+
+    @GetMapping("/getAllHospitals")
+    public ResponseEntity<List<HospitalResponseDTO>> getAllHospital() {
+        List<HospitalResponseDTO> hospitals= hospitalService.getAllHospitals();
+        return ResponseEntity.ok(hospitals);
     }
 }
