@@ -22,12 +22,12 @@ import java.util.List;
 public class Hospital {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long hospitalId;
-    @Column(name = "hospital_name", nullable = false)
-    private String hospitalName;
+    private Long id;
+    @Column(nullable = false)
+    private String name;
     private String address;
     private String phone;
-    @Column(name = "city_name", nullable = false)
+    @Column(nullable = false)
     private String city;
     @Builder.Default
     @OneToMany(mappedBy = "hospital")

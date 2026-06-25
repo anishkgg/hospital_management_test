@@ -20,8 +20,8 @@ public class HospitalService {
         }
 
         Hospital hospital = Hospital.builder()
-                .hospitalId(hospitalRequestDTO.hospitalId())
-                .hospitalName(hospitalRequestDTO.hospitalName())
+                .id(hospitalRequestDTO.hospitalId())
+                .name(hospitalRequestDTO.hospitalName())
                 .address(hospitalRequestDTO.address())
                 .phone(hospitalRequestDTO.phone())
                 .city(hospitalRequestDTO.city())
@@ -30,8 +30,8 @@ public class HospitalService {
         Hospital saveHospital = hospitalRepository.save(hospital);
 
         return HospitalResponseDTO.builder()
-                .id(saveHospital.getHospitalId())
-                .name(saveHospital.getHospitalName())
+                .id(saveHospital.getId())
+                .name(saveHospital.getName())
                 .address(saveHospital.getAddress())
                 .phone(saveHospital.getPhone())
                 .build();

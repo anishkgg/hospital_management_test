@@ -40,8 +40,8 @@ public class DoctorService {
                 .name(savedDoctor.getName())
                 .specialty(savedDoctor.getSpecialty())
                 .phone(savedDoctor.getPhone())
-                .hospitalId(hospital.getHospitalId())
-                .hospitalName(hospital.getHospitalName())
+                .hospitalId(hospital.getId())
+                .hospitalName(hospital.getName())
                 .licenseNumber(savedDoctor.getLicenseNumber())
                 .build();
     }
