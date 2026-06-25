@@ -1,25 +1,12 @@
 package com.hospital.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -29,32 +16,23 @@ import java.util.List;
 public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
+
     private String name;
+
     private String specialty;
+
     @Column(nullable = false, unique = true)
     private String phone;
+
     @ManyToOne
+    @JoinColumn(name = "hospital_id")
     private Hospital hospital;
+
     @Column(unique = true)
     private String licenseNumber;
-    @Builder.Default
+
     @OneToMany(mappedBy = "doctor")
     private List<Appointment> appointments = new ArrayList<>();
-
-    public void setHospital(Hospital hospital) {
-        this.hospital = hospital;
-        if (hospital != null && !hospital.getDoctors().contains(this)) {
-            hospital.addDoctor(this);
-        }
-    }
-
-    public void addAppointment(Appointment appointment) {
-        if (appointment != null) {
-            this.appointments.add(appointment);
-            if (appointment.getDoctor() != this) {
-                appointment.setDoctor(this);
-            }
-        }
-    }
 }

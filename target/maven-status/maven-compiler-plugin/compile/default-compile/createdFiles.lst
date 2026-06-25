@@ -10,13 +10,16 @@ com/hospital/config/DatabaseConnection.class
 com/hospital/HospitalManagementApplication.class
 com/hospital/entity/Appointment$AppointmentBuilder.class
 com/hospital/dto/requestDto/AppointmentRequestDTO.class
+com/hospital/Service/HospitalService.class
 com/hospital/entity/Hospital$HospitalBuilder.class
 com/hospital/repository/HospitalRepository.class
 com/hospital/dto/requestDto/AppointmentRequestDTO$AppointmentRequestDTOBuilder.class
 com/hospital/entity/Doctor$DoctorBuilder.class
 com/hospital/entity/Hospital.class
+com/hospital/Enum/AppointmentStatus.class
 com/hospital/dto/requestDto/HospitalRequestDTO$HospitalRequestDTOBuilder.class
 com/hospital/dto/requestDto/HospitalRequestDTO.class
+com/hospital/Service/DoctorService.class
 com/hospital/dto/responseDto/AppointmentResponseDTO$AppointmentResponseDTOBuilder.class
 com/hospital/repository/DoctorRepository.class
 com/hospital/dto/requestDto/DoctorRequestDTO$DoctorRequestDTOBuilder.class

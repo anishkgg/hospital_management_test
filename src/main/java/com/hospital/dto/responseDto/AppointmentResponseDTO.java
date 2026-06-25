@@ -1,5 +1,6 @@
 package com.hospital.dto.responseDto;
 
+import com.hospital.Enum.AppointmentStatus;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -12,5 +13,5 @@ public record AppointmentResponseDTO(
         LocalDateTime appointmentTime,
         Long doctorId,
         String doctorName,
-        String status
+        AppointmentStatus status
 ) {}
