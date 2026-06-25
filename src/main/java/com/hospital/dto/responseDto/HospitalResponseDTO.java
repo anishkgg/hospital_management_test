@@ -7,5 +7,6 @@ public record HospitalResponseDTO(
         Long id,
         String name,
         String address,
-        String phone
+        String phone,
+        String city
 ) {}

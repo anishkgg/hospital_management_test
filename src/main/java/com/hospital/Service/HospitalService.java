@@ -33,6 +33,7 @@ public class HospitalService {
                 .name(saveHospital.getName())
                 .address(saveHospital.getAddress())
                 .phone(saveHospital.getPhone())
+                .city(saveHospital.getCity())
                 .build();
 
     }
