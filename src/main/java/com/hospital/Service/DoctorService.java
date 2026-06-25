@@ -22,6 +22,10 @@ public class DoctorService {
             throw new IllegalArgumentException("Doctor is already exist");
         }
 
+        if(doctorRepository.existsByPhoneNumber(doctorRequestDTO.phone())) {
+            throw new IllegalArgumentException("Phone Number Can not Same");
+        }
+
         Hospital hospital = hospitalRepository.findById(doctorRequestDTO.hospitalId()).orElseThrow();
 
         Doctor doctor = Doctor.builder()
