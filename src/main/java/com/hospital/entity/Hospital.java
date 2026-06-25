@@ -23,11 +23,9 @@ public class Hospital {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
     private String name;
     private String address;
     private String phone;
-    @Column(nullable = false)
     private String city;
     @Builder.Default
     @OneToMany(mappedBy = "hospital")
