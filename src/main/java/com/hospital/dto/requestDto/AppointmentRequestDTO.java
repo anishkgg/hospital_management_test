@@ -7,10 +7,8 @@ import java.time.LocalDateTime;
 
 @Builder
 public record AppointmentRequestDTO(
-    Long id,
-    String patientName,
-    String patientPhone,
-    LocalDateTime appointmentTime,
-    Long doctorId,
-    AppointmentStatus status
+        String patientName,
+        String patientPhone,
+        LocalDateTime appointmentTime,
+        Long doctorId
 ) {}

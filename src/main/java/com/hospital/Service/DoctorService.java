@@ -13,6 +13,7 @@ import javax.print.Doc;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
 public class DoctorService {
     @Autowired
@@ -33,7 +34,6 @@ public class DoctorService {
         Hospital hospital = hospitalRepository.findById(doctorRequestDTO.hospitalId()).orElseThrow();
 
         Doctor doctor = Doctor.builder()
-                .id(doctorRequestDTO.id())
                 .name(doctorRequestDTO.name())
                 .specialty(doctorRequestDTO.specialty())
                 .phone(doctorRequestDTO.phone())
