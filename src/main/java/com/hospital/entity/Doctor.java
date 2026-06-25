@@ -32,6 +32,7 @@ public class Doctor {
     private Long id;
     private String name;
     private String specialty;
+    @Column(nullable = false, unique = true)
     private String phone;
     @ManyToOne
     private Hospital hospital;
