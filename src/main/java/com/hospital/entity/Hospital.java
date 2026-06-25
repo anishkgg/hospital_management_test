@@ -23,7 +23,7 @@ public class Hospital {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long hospitalId;
-    @Column(name = "hostpital_name", nullable = false)
+    @Column(name = "hospital_name", nullable = false)
     private String hospitalName;
     private String address;
     private String phone;
