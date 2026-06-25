@@ -20,7 +20,6 @@ public class HospitalService {
         }
 
         Hospital hospital = Hospital.builder()
-                .id(hospitalRequestDTO.hospitalId())
                 .name(hospitalRequestDTO.hospitalName())
                 .address(hospitalRequestDTO.address())
                 .phone(hospitalRequestDTO.phone())
