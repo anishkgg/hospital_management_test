@@ -1,11 +1,6 @@
 package com.hospital.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,10 +22,13 @@ import java.util.List;
 public class Hospital {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
+    private Long hospitalId;
+    @Column(name = "hostpital_name", nullable = false)
+    private String hospitalName;
     private String address;
     private String phone;
+    @Column(name = "city_name", nullable = false)
+    private String city;
     @Builder.Default
     @OneToMany(mappedBy = "hospital")
     private List<Doctor> doctors = new ArrayList<>();

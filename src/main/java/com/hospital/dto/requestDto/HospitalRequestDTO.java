@@ -4,8 +4,9 @@ import lombok.Builder;
 
 @Builder
 public record HospitalRequestDTO(
-    Long id,
-    String name,
+    Long hospitalId,
+    String hospitalName,
     String address,
-    String phone
+    String phone,
+    String city
 ) {}
