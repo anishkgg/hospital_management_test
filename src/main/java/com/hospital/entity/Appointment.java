@@ -25,7 +25,7 @@ public class Appointment {
     private LocalDateTime appointmentTime;
 
     @ManyToOne
-    @JoinColumn(name = "docter_id")
+    @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
     @Enumerated(EnumType.STRING)
