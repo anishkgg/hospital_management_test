@@ -66,6 +66,12 @@ public class controller {
         return ResponseEntity.ok(appointmentResponseDTO);
     }
 
+    @GetMapping("/appointment/details")
+    public ResponseEntity<AppointmentResponseDTO> getBookingDetails(@RequestParam("bookingCode") String bookingCode) {
+        AppointmentResponseDTO getAppointmentDetails = appointmentService.getAppointmentByBookingCode(bookingCode);
+        return ResponseEntity.ok(getAppointmentDetails);
+    }
+
     @PutMapping("appointment/cancel")
     public ResponseEntity<AppointmentResponseDTO> AppointmentCancellation(@RequestParam("id") Long appointmentId) {
         AppointmentResponseDTO cancelAppointment = appointmentService.cancelAppointment(appointmentId);

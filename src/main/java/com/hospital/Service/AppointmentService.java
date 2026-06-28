@@ -25,6 +25,8 @@ public class AppointmentService {
     @Autowired
     private DoctorRepository doctorRepository;
 
+    //********* Booking Appointment ********************
+
     public AppointmentBookingResponseDTO bookAppointment(AppointmentRequestDTO appointmentRequestDTO) {
         if (appointmentRequestDTO.appointmentTime().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Appointment in Future");
@@ -53,6 +55,12 @@ public class AppointmentService {
                 .status(saveAppointment.getStatus())
                 .appointmentTime(saveAppointment.getAppointmentTime())
                 .build();
+    }
+
+    public AppointmentResponseDTO getAppointmentByBookingCode(String bookingCode) {
+        Appointment appointment = appointmentRepository.findByBookingCode(bookingCode)
+                .orElseThrow(() -> new IllegalArgumentException("Appointment with this booking code " + bookingCode + " is not available"));
+        return convertToResponseDTO(appointment);
     }
 
     public List<AppointmentResponseDTO> getAllAppointment() {
