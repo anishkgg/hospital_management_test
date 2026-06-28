@@ -29,5 +29,8 @@ public class Appointment {
     private Doctor doctor;
 
     @Enumerated(EnumType.STRING)
-    private AppointmentStatus status; // e.g., SCHEDULED, CANCELLED, COMPLETED
+    private AppointmentStatus status;
+
+    @Column(nullable = false, unique = true, length = 10)
+    private String bookingCode;
 }

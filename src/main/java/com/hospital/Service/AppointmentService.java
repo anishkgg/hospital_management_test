@@ -1,7 +1,9 @@
 package com.hospital.Service;
 
 import com.hospital.Enum.AppointmentStatus;
+import com.hospital.Utils.AppointmentUtils;
 import com.hospital.dto.requestDto.AppointmentRequestDTO;
+import com.hospital.dto.responseDto.AppointmentBookingResponseDTO;
 import com.hospital.dto.responseDto.AppointmentResponseDTO;
 import com.hospital.entity.Appointment;
 import com.hospital.entity.Doctor;
@@ -23,7 +25,7 @@ public class AppointmentService {
     @Autowired
     private DoctorRepository doctorRepository;
 
-    public AppointmentResponseDTO bookAppointment(AppointmentRequestDTO appointmentRequestDTO) {
+    public AppointmentBookingResponseDTO bookAppointment(AppointmentRequestDTO appointmentRequestDTO) {
         if (appointmentRequestDTO.appointmentTime().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Appointment in Future");
         }
@@ -41,11 +43,16 @@ public class AppointmentService {
                 .appointmentTime(appointmentRequestDTO.appointmentTime())
                 .doctor(doctor)
                 .status(AppointmentStatus.SCHEDULED)
+                .bookingCode(AppointmentUtils.generateUniqueBookingCode(appointmentRepository))
                 .build();
 
         Appointment saveAppointment = appointmentRepository.save(appointment);
 
-        return convertToResponseDTO(saveAppointment);
+        return AppointmentBookingResponseDTO.builder()
+                .bookingCode(saveAppointment.getBookingCode())
+                .status(saveAppointment.getStatus())
+                .appointmentTime(saveAppointment.getAppointmentTime())
+                .build();
     }
 
     public List<AppointmentResponseDTO> getAllAppointment() {

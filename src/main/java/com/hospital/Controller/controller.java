@@ -6,6 +6,7 @@ import com.hospital.Service.HospitalService;
 import com.hospital.dto.requestDto.AppointmentRequestDTO;
 import com.hospital.dto.requestDto.DoctorRequestDTO;
 import com.hospital.dto.requestDto.HospitalRequestDTO;
+import com.hospital.dto.responseDto.AppointmentBookingResponseDTO;
 import com.hospital.dto.responseDto.AppointmentResponseDTO;
 import com.hospital.dto.responseDto.DoctorResponseDTO;
 import com.hospital.dto.responseDto.HospitalResponseDTO;
@@ -54,8 +55,8 @@ public class controller {
     }
 
     @PostMapping("book/appointment")
-    public ResponseEntity<AppointmentResponseDTO> bookAppointment (@RequestBody AppointmentRequestDTO appointmentRequestDTO) {
-        AppointmentResponseDTO appointments = appointmentService.bookAppointment(appointmentRequestDTO);
+    public ResponseEntity<AppointmentBookingResponseDTO> bookAppointment (@RequestBody AppointmentRequestDTO appointmentRequestDTO) {
+        AppointmentBookingResponseDTO appointments = appointmentService.bookAppointment(appointmentRequestDTO);
         return new ResponseEntity<>(appointments, HttpStatus.CREATED);
     }
 
