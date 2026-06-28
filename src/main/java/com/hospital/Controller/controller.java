@@ -60,9 +60,20 @@ public class controller {
     }
 
     @GetMapping("getAllAppointment")
-    public ResponseEntity<List<AppointmentResponseDTO>> getAllAppointment () {
+    public ResponseEntity<List<AppointmentResponseDTO>> getAllAppointment() {
         List<AppointmentResponseDTO> appointmentResponseDTO = appointmentService.getAllAppointment();
         return ResponseEntity.ok(appointmentResponseDTO);
     }
 
+    @PutMapping("appointment/cancel")
+    public ResponseEntity<AppointmentResponseDTO> AppointmentCancellation(@RequestParam("id") Long appointmentId) {
+        AppointmentResponseDTO cancelAppointment = appointmentService.cancelAppointment(appointmentId);
+        return ResponseEntity.ok(cancelAppointment);
+    }
+
+    @PutMapping("appointment/complete")
+    public ResponseEntity<AppointmentResponseDTO> AppointmentComplete(@RequestParam("id") Long appointmentId) {
+        AppointmentResponseDTO completeAppointment = appointmentService.completeAppointment(appointmentId);
+        return ResponseEntity.ok(completeAppointment);
+    }
 }

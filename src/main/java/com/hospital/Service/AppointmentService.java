@@ -28,7 +28,7 @@ public class AppointmentService {
             throw new IllegalArgumentException("Appointment in Future");
         }
 
-        if(appointmentRepository.existsByPatientPhone(appointmentRequestDTO.patientPhone())) {
+        if (appointmentRepository.existsByPatientPhone(appointmentRequestDTO.patientPhone())) {
             throw new IllegalArgumentException("Phone Number Can not Same");
         }
 
@@ -45,30 +45,56 @@ public class AppointmentService {
 
         Appointment saveAppointment = appointmentRepository.save(appointment);
 
-        return AppointmentResponseDTO.builder()
-                .id(saveAppointment.getId())
-                .patientName(saveAppointment.getPatientName())
-                .patientPhone(saveAppointment.getPatientPhone())
-                .appointmentTime(saveAppointment.getAppointmentTime())
-                .doctorId(doctor.getId())
-                .doctorName(doctor.getName())
-                .status(saveAppointment.getStatus())
-                .build();
+        return convertToResponseDTO(saveAppointment);
     }
 
     public List<AppointmentResponseDTO> getAllAppointment() {
         List<Appointment> appointments = appointmentRepository.findAll();
 
         return appointments.stream()
-                .map(appointment -> AppointmentResponseDTO.builder()
-                        .id(appointment.getId())
-                        .patientName(appointment.getPatientName())
-                        .patientPhone(appointment.getPatientPhone())
-                        .appointmentTime(appointment.getAppointmentTime())
-                        .doctorId(appointment.getDoctor() != null ? appointment.getDoctor().getId() : null)
-                        .doctorName(appointment.getDoctor() != null ? appointment.getDoctor().getName() : null)
-                        .status(appointment.getStatus())
-                        .build())
+                .map(this::convertToResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    // ************* Cancelled Appointment **********************
+
+    public AppointmentResponseDTO cancelAppointment(Long appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Appointment not Found"));
+
+        if(appointment.getStatus() == AppointmentStatus.COMPLETED) {
+            throw new IllegalArgumentException("Complete Appointment can not be Cancelled");
+        }
+
+        appointment.setStatus(AppointmentStatus.CANCELLED);
+        Appointment cancelledAppointment = appointmentRepository.save(appointment);
+        return convertToResponseDTO(cancelledAppointment);
+    }
+
+    // **************** Complete Appointment *************************
+
+    public AppointmentResponseDTO completeAppointment(Long appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Appointment is Completed"));
+
+        if(appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            throw new IllegalArgumentException("Already Cancelled Appointment");
+        }
+
+        appointment.setStatus(AppointmentStatus.COMPLETED);
+        Appointment completeAppointment = appointmentRepository.save(appointment);
+        return convertToResponseDTO(completeAppointment);
+    }
+
+    private AppointmentResponseDTO convertToResponseDTO(Appointment appointment) {
+        return AppointmentResponseDTO.builder()
+                .id(appointment.getId())
+                .patientName(appointment.getPatientName())
+                .patientPhone(appointment.getPatientPhone())
+                .appointmentTime(appointment.getAppointmentTime())
+                .doctorId(appointment.getDoctor() != null ? appointment.getDoctor().getId() : null)
+                .doctorName(appointment.getDoctor() != null ? appointment.getDoctor().getName() : "N/A")
+                .status(appointment.getStatus())
+                .build();
     }
 }
