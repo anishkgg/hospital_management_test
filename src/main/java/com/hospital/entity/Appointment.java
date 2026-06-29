@@ -33,4 +33,7 @@ public class Appointment {
 
     @Column(nullable = false, unique = true, length = 10)
     private String bookingCode;
+
+    @Column(length = 1000)
+    private String medicalNotes;
 }

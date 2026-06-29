@@ -3,6 +3,7 @@ package com.hospital.Controller;
 import com.hospital.Service.AppointmentService;
 import com.hospital.Service.DoctorService;
 import com.hospital.Service.HospitalService;
+import com.hospital.dto.requestDto.AppointmentCompleteRequestDTO;
 import com.hospital.dto.requestDto.AppointmentRequestDTO;
 import com.hospital.dto.requestDto.DoctorRequestDTO;
 import com.hospital.dto.requestDto.HospitalRequestDTO;
@@ -88,8 +89,10 @@ public class controller {
     }
 
     @PutMapping("appointment/complete")
-    public ResponseEntity<AppointmentResponseDTO> AppointmentComplete(@RequestParam("id") Long appointmentId) {
-        AppointmentResponseDTO completeAppointment = appointmentService.completeAppointment(appointmentId);
+    public ResponseEntity<AppointmentResponseDTO> AppointmentComplete(
+            @RequestParam("id") Long appointmentId,
+            @RequestBody(required = false) AppointmentCompleteRequestDTO requestDTO) {
+        AppointmentResponseDTO completeAppointment = appointmentService.completeAppointment(appointmentId, requestDTO);
         return ResponseEntity.ok(completeAppointment);
     }
 }

@@ -1,5 +1,6 @@
 package com.hospital.Service;
 
+import com.hospital.dto.requestDto.AppointmentCompleteRequestDTO;
 import com.hospital.dto.requestDto.AppointmentRequestDTO;
 import com.hospital.dto.responseDto.AppointmentBookingResponseDTO;
 import com.hospital.dto.responseDto.AppointmentResponseDTO;
@@ -11,5 +12,5 @@ public interface AppointmentService {
     AppointmentResponseDTO getAppointmentByBookingCode(String bookingCode);
     List<AppointmentResponseDTO> getAllAppointment();
     AppointmentResponseDTO cancelAppointment(Long appointmentId);
-    AppointmentResponseDTO completeAppointment(Long appointmentId);
+    AppointmentResponseDTO completeAppointment(Long appointmentId, AppointmentCompleteRequestDTO requestDTO);
 }

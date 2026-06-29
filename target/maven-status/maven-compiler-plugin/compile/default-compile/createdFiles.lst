@@ -5,6 +5,7 @@ com/hospital/Utils/AppointmentUtils.class
 com/hospital/dto/responseDto/HospitalResponseDTO.class
 com/hospital/dto/responseDto/DoctorResponseDTO.class
 com/hospital/dto/responseDto/HospitalResponseDTO$HospitalResponseDTOBuilder.class
+com/hospital/dto/requestDto/AppointmentCompleteRequestDTO.class
 com/hospital/entity/Appointment.class
 com/hospital/Service/imp/DoctorServiceImpl.class
 com/hospital/entity/Doctor.class

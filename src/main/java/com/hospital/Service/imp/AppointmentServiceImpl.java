@@ -3,6 +3,7 @@ package com.hospital.Service.imp;
 import com.hospital.Enum.AppointmentStatus;
 import com.hospital.Service.AppointmentService;
 import com.hospital.Utils.AppointmentUtils;
+import com.hospital.dto.requestDto.AppointmentCompleteRequestDTO;
 import com.hospital.dto.requestDto.AppointmentRequestDTO;
 import com.hospital.dto.responseDto.AppointmentBookingResponseDTO;
 import com.hospital.dto.responseDto.AppointmentResponseDTO;
@@ -96,15 +97,18 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public AppointmentResponseDTO completeAppointment(Long appointmentId) {
+    public AppointmentResponseDTO completeAppointment(Long appointmentId, AppointmentCompleteRequestDTO requestDTO) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Appointment is Completed"));
+                .orElseThrow(() -> new IllegalArgumentException("Appointment not Found"));
 
         if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
             throw new IllegalArgumentException("Already Cancelled Appointment");
         }
 
         appointment.setStatus(AppointmentStatus.COMPLETED);
+        if (requestDTO != null && requestDTO.medicalNotes() != null) {
+            appointment.setMedicalNotes(requestDTO.medicalNotes());
+        }
         Appointment completeAppointment = appointmentRepository.save(appointment);
         return convertToResponseDTO(completeAppointment);
     }
@@ -118,6 +122,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .doctorId(appointment.getDoctor() != null ? appointment.getDoctor().getId() : null)
                 .doctorName(appointment.getDoctor() != null ? appointment.getDoctor().getName() : "N/A")
                 .status(appointment.getStatus())
+                .bookingCode(appointment.getBookingCode())
+                .medicalNotes(appointment.getMedicalNotes())
                 .build();
     }
 }
