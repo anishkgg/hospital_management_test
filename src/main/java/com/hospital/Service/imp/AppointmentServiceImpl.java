@@ -14,9 +14,11 @@ import com.hospital.dto.responseDto.AppointmentResponseDTO;
 import com.hospital.entity.Appointment;
 import com.hospital.entity.Doctor;
 import com.hospital.repository.AppointmentRepository;
+import com.hospital.repository.AppointmentReportRepository;
 import com.hospital.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -30,6 +32,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private AppointmentReportRepository appointmentReportRepository;
 
     @Autowired
     private DoctorRepository doctorRepository;
@@ -66,8 +71,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         LocalDateTime startTime = requestedTime.minusMinutes(30);
         LocalDateTime endTime = requestedTime.plusMinutes(30);
 
-        if (appointmentRepository.existsOverlappingAppointment(doctor.getId(), startTime, endTime)) {
-            throw new IllegalArgumentException("Doctor already has an overlapping appointment within this 30-minute slot.");
+        // Determine if slot overlaps with an active appointment
+        AppointmentStatus initialStatus = AppointmentStatus.SCHEDULED;
+        boolean hasOverlap = appointmentReportRepository.existsOverlappingAppointment(doctor.getId(), startTime, endTime);
+        if (hasOverlap) {
+            initialStatus = AppointmentStatus.WAITING;
         }
 
         Appointment appointment = Appointment.builder()
@@ -76,21 +84,25 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .patientEmail(appointmentRequestDTO.patientEmail())
                 .appointmentTime(appointmentRequestDTO.appointmentTime())
                 .doctor(doctor)
-                .status(AppointmentStatus.SCHEDULED)
+                .status(initialStatus)
                 .bookingCode(AppointmentUtils.generateUniqueBookingCode(appointmentRepository))
                 .build();
 
         Appointment saveAppointment = appointmentRepository.save(appointment);
 
-        // Publish event for SMS/Email notification
-        eventPublisher.publishEvent(new AppointmentBookedEvent(
-                saveAppointment.getId(),
-                saveAppointment.getPatientName(),
-                saveAppointment.getPatientPhone(),
-                doctor.getName(),
-                saveAppointment.getAppointmentTime(),
-                saveAppointment.getBookingCode()
-        ));
+        if (initialStatus == AppointmentStatus.SCHEDULED) {
+            // Publish event for SMS/Email notification only if SCHEDULED
+            eventPublisher.publishEvent(new AppointmentBookedEvent(
+                    saveAppointment.getId(),
+                    saveAppointment.getPatientName(),
+                    saveAppointment.getPatientPhone(),
+                    doctor.getName(),
+                    saveAppointment.getAppointmentTime(),
+                    saveAppointment.getBookingCode()
+            ));
+        } else {
+            System.out.println("Patient " + saveAppointment.getPatientName() + " placed on Doctor " + doctor.getName() + "'s waiting list.");
+        }
 
         return AppointmentBookingResponseDTO.builder()
                 .bookingCode(saveAppointment.getBookingCode())
@@ -124,6 +136,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new IllegalArgumentException("Complete Appointment can not be Cancelled");
         }
 
+        AppointmentStatus previousStatus = appointment.getStatus();
         appointment.setStatus(AppointmentStatus.CANCELLED);
         Appointment cancelledAppointment = appointmentRepository.save(appointment);
 
@@ -135,6 +148,37 @@ public class AppointmentServiceImpl implements AppointmentService {
                 cancelledAppointment.getBookingCode()
         ));
 
+        // If the cancelled appointment was SCHEDULED, try to promote the first patient on the WAITING list for this slot
+        if (previousStatus == AppointmentStatus.SCHEDULED) {
+            LocalDateTime cancelledTime = cancelledAppointment.getAppointmentTime();
+            LocalDateTime startTime = cancelledTime.minusMinutes(30);
+            LocalDateTime endTime = cancelledTime.plusMinutes(30);
+
+            List<Appointment> waitingList = appointmentReportRepository.findFirstWaitingAppointmentForSlot(
+                    cancelledAppointment.getDoctor().getId(),
+                    startTime,
+                    endTime,
+                    PageRequest.of(0, 1)
+            );
+
+            if (!waitingList.isEmpty()) {
+                Appointment promoted = waitingList.get(0);
+                promoted.setStatus(AppointmentStatus.SCHEDULED);
+                appointmentRepository.save(promoted);
+
+                // Publish event to trigger confirmation notification for the promoted patient
+                eventPublisher.publishEvent(new AppointmentBookedEvent(
+                        promoted.getId(),
+                        promoted.getPatientName(),
+                        promoted.getPatientPhone(),
+                        promoted.getDoctor().getName(),
+                        promoted.getAppointmentTime(),
+                        promoted.getBookingCode()
+                ));
+                System.out.println("Promoted Patient " + promoted.getPatientName() + " from waiting list to SCHEDULED.");
+            }
+        }
+
         return convertToResponseDTO(cancelledAppointment);
     }
 
@@ -143,8 +187,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Appointment not Found"));
 
-        if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
-            throw new IllegalArgumentException("Already Cancelled Appointment");
+        if (appointment.getStatus() == AppointmentStatus.CANCELLED || appointment.getStatus() == AppointmentStatus.WAITING) {
+            throw new IllegalArgumentException("Cancelled or Waiting appointments cannot be completed");
         }
 
         appointment.setStatus(AppointmentStatus.COMPLETED);
@@ -179,7 +223,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         LocalDateTime startTime = newTime.minusMinutes(30);
         LocalDateTime endTime = newTime.plusMinutes(30);
 
-        if (appointmentRepository.existsOverlappingAppointmentForReschedule(
+        if (appointmentReportRepository.existsOverlappingAppointmentForReschedule(
                 appointment.getDoctor().getId(),
                 appointment.getId(),
                 startTime,
@@ -187,7 +231,9 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new IllegalArgumentException("Doctor already has an overlapping appointment within this 30-minute slot.");
         }
 
+        // Rescheduled appointment gets SCHEDULED status
         appointment.setAppointmentTime(newTime);
+        appointment.setStatus(AppointmentStatus.SCHEDULED);
         Appointment rescheduledAppointment = appointmentRepository.save(appointment);
         return convertToResponseDTO(rescheduledAppointment);
     }

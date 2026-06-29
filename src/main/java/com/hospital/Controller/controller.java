@@ -3,6 +3,7 @@ package com.hospital.Controller;
 import com.hospital.Service.AppointmentService;
 import com.hospital.Service.DoctorService;
 import com.hospital.Service.HospitalService;
+import com.hospital.Service.ReportService;
 import com.hospital.dto.requestDto.AppointmentCompleteRequestDTO;
 import com.hospital.dto.requestDto.AppointmentRequestDTO;
 import com.hospital.dto.requestDto.AppointmentRescheduleRequestDTO;
@@ -14,6 +15,7 @@ import com.hospital.dto.responseDto.AppointmentResponseDTO;
 import com.hospital.dto.responseDto.DoctorResponseDTO;
 import com.hospital.dto.responseDto.DoctorDetailsResponseDTO;
 import com.hospital.dto.responseDto.HospitalResponseDTO;
+import com.hospital.dto.responseDto.HospitalReportDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,15 @@ public class controller {
 
     @Autowired
     private AppointmentService appointmentService;
+
+    @Autowired
+    private ReportService reportService;
+
+    @PostMapping("/addHospital")
+    public ResponseEntity<HospitalResponseDTO> addHospital (@RequestBody HospitalRequestDTO hospitalRequestDTO) {
+        HospitalResponseDTO createHospital = hospitalService.createHospital(hospitalRequestDTO);
+        return new ResponseEntity<>(createHospital, HttpStatus.CREATED);
+    }
 
     @PostMapping("/addDoctors")
     public ResponseEntity<DoctorResponseDTO> addDoctor (@RequestBody DoctorRequestDTO doctorRequestDTO) {
@@ -111,5 +122,11 @@ public class controller {
             @RequestBody AppointmentRescheduleRequestDTO requestDTO) {
         AppointmentResponseDTO rescheduleAppointment = appointmentService.rescheduleAppointment(appointmentId, requestDTO);
         return ResponseEntity.ok(rescheduleAppointment);
+    }
+
+    @GetMapping("/reports/summary")
+    public ResponseEntity<HospitalReportDTO> getReportSummary() {
+        HospitalReportDTO summary = reportService.getAnalyticsSummary();
+        return ResponseEntity.ok(summary);
     }
 }
