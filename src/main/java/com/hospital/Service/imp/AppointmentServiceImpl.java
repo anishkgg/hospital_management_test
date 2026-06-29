@@ -39,6 +39,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         Doctor doctor = doctorRepository.findById(appointmentRequestDTO.doctorId())
                 .orElseThrow(() -> new IllegalArgumentException("Doctor is not Found"));
 
+        LocalDateTime requestedTime = appointmentRequestDTO.appointmentTime();
+        LocalDateTime startTime = requestedTime.minusMinutes(30);
+        LocalDateTime endTime = requestedTime.plusMinutes(30);
+
+        if (appointmentRepository.existsOverlappingAppointment(doctor.getId(), startTime, endTime)) {
+            throw new IllegalArgumentException("Doctor already has an overlapping appointment within this 30-minute slot.");
+        }
+
         Appointment appointment = Appointment.builder()
                 .patientName(appointmentRequestDTO.patientName())
                 .patientPhone(appointmentRequestDTO.patientPhone())
