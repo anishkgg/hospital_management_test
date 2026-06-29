@@ -22,6 +22,8 @@ public class Appointment {
 
     private String patientPhone;
 
+    private String patientEmail;
+
     private LocalDateTime appointmentTime;
 
     @ManyToOne

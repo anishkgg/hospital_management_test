@@ -22,7 +22,7 @@ com/hospital/Service/imp/AppointmentServiceImpl.class
 com/hospital/Service/HospitalService.class
 com/hospital/entity/Hospital$HospitalBuilder.class
 com/hospital/repository/HospitalRepository.class
-com/hospital/dto/requestDto/AppointmentRequestDTO$AppointmentRequestDTOBuilder.class
+com/hospital/Utils/ValidationUtils.class
 com/hospital/entity/Doctor$DoctorBuilder.class
 com/hospital/entity/Hospital.class
 com/hospital/Enum/AppointmentStatus.class

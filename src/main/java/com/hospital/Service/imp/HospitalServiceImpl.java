@@ -1,6 +1,7 @@
 package com.hospital.Service.imp;
 
 import com.hospital.Service.HospitalService;
+import com.hospital.Utils.ValidationUtils;
 import com.hospital.dto.requestDto.HospitalRequestDTO;
 import com.hospital.dto.responseDto.HospitalResponseDTO;
 import com.hospital.entity.Hospital;
@@ -19,6 +20,9 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Override
     public HospitalResponseDTO createHospital(HospitalRequestDTO hospitalRequestDTO) {
+        if (!ValidationUtils.isValidIndianPhoneNumber(hospitalRequestDTO.phone())) {
+            throw new IllegalArgumentException("Invalid Indian Phone Number");
+        }
 
         if (hospitalRepository.existsByNameAndCity(hospitalRequestDTO.hospitalName(), hospitalRequestDTO.city())) {
             throw new IllegalArgumentException("Hospital is Already Exist");

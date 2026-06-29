@@ -10,6 +10,7 @@ public record AppointmentResponseDTO(
         Long id,
         String patientName,
         String patientPhone,
+        String patientEmail,
         LocalDateTime appointmentTime,
         Long doctorId,
         String doctorName,

@@ -1,6 +1,7 @@
 package com.hospital.Service.imp;
 
 import com.hospital.Service.DoctorService;
+import com.hospital.Utils.ValidationUtils;
 import com.hospital.dto.requestDto.DoctorRequestDTO;
 import com.hospital.dto.responseDto.DoctorResponseDTO;
 import com.hospital.entity.Doctor;
@@ -24,6 +25,14 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public DoctorResponseDTO createDoctor(DoctorRequestDTO doctorRequestDTO) {
+        if (!ValidationUtils.isValidIndianPhoneNumber(doctorRequestDTO.phone())) {
+            throw new IllegalArgumentException("Invalid Indian Phone Number");
+        }
+
+        if (doctorRequestDTO.email() != null && !ValidationUtils.isValidEmail(doctorRequestDTO.email())) {
+            throw new IllegalArgumentException("Invalid Email Address");
+        }
+
         if (doctorRepository.existsByLicenseNumber(doctorRequestDTO.licenseNumber())) {
             throw new IllegalArgumentException("Doctor is already exist");
         }
@@ -39,6 +48,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .name(doctorRequestDTO.name())
                 .specialty(doctorRequestDTO.specialty())
                 .phone(doctorRequestDTO.phone())
+                .email(doctorRequestDTO.email())
                 .hospital(hospital)
                 .licenseNumber(doctorRequestDTO.licenseNumber())
                 .build();
@@ -50,6 +60,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .name(savedDoctor.getName())
                 .specialty(savedDoctor.getSpecialty())
                 .phone(savedDoctor.getPhone())
+                .email(savedDoctor.getEmail())
                 .hospitalId(hospital.getId())
                 .hospitalName(hospital.getName())
                 .licenseNumber(savedDoctor.getLicenseNumber())
@@ -66,6 +77,7 @@ public class DoctorServiceImpl implements DoctorService {
                         .name(doctor.getName())
                         .specialty(doctor.getSpecialty())
                         .phone(doctor.getPhone())
+                        .email(doctor.getEmail())
                         .hospitalId(doctor.getHospital() != null ? doctor.getHospital().getId() : null)
                         .hospitalName(doctor.getHospital() != null ? doctor.getHospital().getName() : "N/A")
                         .licenseNumber(doctor.getLicenseNumber())
@@ -83,6 +95,7 @@ public class DoctorServiceImpl implements DoctorService {
                         .name(doctor.getName())
                         .specialty(doctor.getSpecialty())
                         .phone(doctor.getPhone())
+                        .email(doctor.getEmail())
                         .hospitalId(doctor.getHospital() != null ? doctor.getHospital().getId() : null)
                         .hospitalName(doctor.getHospital() != null ? doctor.getHospital().getName() : "N/A")
                         .licenseNumber(doctor.getLicenseNumber())

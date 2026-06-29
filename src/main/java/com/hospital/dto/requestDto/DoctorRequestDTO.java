@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public record DoctorRequestDTO(String name,
                                String specialty,
                                String phone,
+                               String email,
                                Long hospitalId,
                                String licenseNumber) {}

@@ -5,6 +5,7 @@ import com.hospital.Event.AppointmentBookedEvent;
 import com.hospital.Event.AppointmentCancelledEvent;
 import com.hospital.Service.AppointmentService;
 import com.hospital.Utils.AppointmentUtils;
+import com.hospital.Utils.ValidationUtils;
 import com.hospital.dto.requestDto.AppointmentCompleteRequestDTO;
 import com.hospital.dto.requestDto.AppointmentRequestDTO;
 import com.hospital.dto.responseDto.AppointmentBookingResponseDTO;
@@ -39,6 +40,14 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new IllegalArgumentException("Appointment in Future");
         }
 
+        if (!ValidationUtils.isValidIndianPhoneNumber(appointmentRequestDTO.patientPhone())) {
+            throw new IllegalArgumentException("Invalid Indian Phone Number");
+        }
+
+        if (appointmentRequestDTO.patientEmail() != null && !ValidationUtils.isValidEmail(appointmentRequestDTO.patientEmail())) {
+            throw new IllegalArgumentException("Invalid Email Address");
+        }
+
         if (appointmentRepository.existsByPatientPhone(appointmentRequestDTO.patientPhone())) {
             throw new IllegalArgumentException("Phone Number Can not Same");
         }
@@ -57,6 +66,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Appointment appointment = Appointment.builder()
                 .patientName(appointmentRequestDTO.patientName())
                 .patientPhone(appointmentRequestDTO.patientPhone())
+                .patientEmail(appointmentRequestDTO.patientEmail())
                 .appointmentTime(appointmentRequestDTO.appointmentTime())
                 .doctor(doctor)
                 .status(AppointmentStatus.SCHEDULED)
@@ -143,6 +153,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .id(appointment.getId())
                 .patientName(appointment.getPatientName())
                 .patientPhone(appointment.getPatientPhone())
+                .patientEmail(appointment.getPatientEmail())
                 .appointmentTime(appointment.getAppointmentTime())
                 .doctorId(appointment.getDoctor() != null ? appointment.getDoctor().getId() : null)
                 .doctorName(appointment.getDoctor() != null ? appointment.getDoctor().getName() : "N/A")
