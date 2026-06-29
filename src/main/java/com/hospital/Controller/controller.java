@@ -5,6 +5,7 @@ import com.hospital.Service.DoctorService;
 import com.hospital.Service.HospitalService;
 import com.hospital.dto.requestDto.AppointmentCompleteRequestDTO;
 import com.hospital.dto.requestDto.AppointmentRequestDTO;
+import com.hospital.dto.requestDto.AppointmentRescheduleRequestDTO;
 import com.hospital.dto.requestDto.DoctorRequestDTO;
 import com.hospital.dto.requestDto.HospitalRequestDTO;
 import com.hospital.dto.responseDto.AppointmentBookingResponseDTO;
@@ -94,5 +95,13 @@ public class controller {
             @RequestBody(required = false) AppointmentCompleteRequestDTO requestDTO) {
         AppointmentResponseDTO completeAppointment = appointmentService.completeAppointment(appointmentId, requestDTO);
         return ResponseEntity.ok(completeAppointment);
+    }
+
+    @PutMapping("appointment/reschedule")
+    public ResponseEntity<AppointmentResponseDTO> AppointmentReschedule(
+            @RequestParam("id") Long appointmentId,
+            @RequestBody AppointmentRescheduleRequestDTO requestDTO) {
+        AppointmentResponseDTO rescheduleAppointment = appointmentService.rescheduleAppointment(appointmentId, requestDTO);
+        return ResponseEntity.ok(rescheduleAppointment);
     }
 }

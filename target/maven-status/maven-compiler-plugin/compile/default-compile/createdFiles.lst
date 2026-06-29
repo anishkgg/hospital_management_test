@@ -1,5 +1,7 @@
+com/hospital/Controller/GlobalExceptionHandler.class
 com/hospital/Controller/controller.class
 com/hospital/dto/responseDto/AppointmentResponseDTO.class
+com/hospital/dto/requestDto/AppointmentRescheduleRequestDTO.class
 com/hospital/Service/AppointmentService.class
 com/hospital/Utils/AppointmentUtils.class
 com/hospital/dto/responseDto/HospitalResponseDTO.class

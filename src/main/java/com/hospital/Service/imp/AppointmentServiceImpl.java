@@ -8,6 +8,7 @@ import com.hospital.Utils.AppointmentUtils;
 import com.hospital.Utils.ValidationUtils;
 import com.hospital.dto.requestDto.AppointmentCompleteRequestDTO;
 import com.hospital.dto.requestDto.AppointmentRequestDTO;
+import com.hospital.dto.requestDto.AppointmentRescheduleRequestDTO;
 import com.hospital.dto.responseDto.AppointmentBookingResponseDTO;
 import com.hospital.dto.responseDto.AppointmentResponseDTO;
 import com.hospital.entity.Appointment;
@@ -146,6 +147,40 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         Appointment completeAppointment = appointmentRepository.save(appointment);
         return convertToResponseDTO(completeAppointment);
+    }
+
+    @Override
+    public AppointmentResponseDTO rescheduleAppointment(Long appointmentId, AppointmentRescheduleRequestDTO requestDTO) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Appointment not Found"));
+
+        if (appointment.getStatus() == AppointmentStatus.COMPLETED || appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            throw new IllegalArgumentException("Completed or Cancelled appointments cannot be rescheduled");
+        }
+
+        LocalDateTime newTime = requestDTO.newTime();
+        if (newTime == null) {
+            throw new IllegalArgumentException("New appointment time cannot be null");
+        }
+
+        if (newTime.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Appointment time must be in the future");
+        }
+
+        LocalDateTime startTime = newTime.minusMinutes(30);
+        LocalDateTime endTime = newTime.plusMinutes(30);
+
+        if (appointmentRepository.existsOverlappingAppointmentForReschedule(
+                appointment.getDoctor().getId(),
+                appointment.getId(),
+                startTime,
+                endTime)) {
+            throw new IllegalArgumentException("Doctor already has an overlapping appointment within this 30-minute slot.");
+        }
+
+        appointment.setAppointmentTime(newTime);
+        Appointment rescheduledAppointment = appointmentRepository.save(appointment);
+        return convertToResponseDTO(rescheduledAppointment);
     }
 
     private AppointmentResponseDTO convertToResponseDTO(Appointment appointment) {

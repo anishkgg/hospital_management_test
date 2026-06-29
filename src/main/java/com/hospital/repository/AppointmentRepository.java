@@ -21,5 +21,13 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     boolean existsOverlappingAppointment(@Param("doctorId") Long doctorId,
                                          @Param("startTime") LocalDateTime startTime,
                                          @Param("endTime") LocalDateTime endTime);
-}
 
+    @Query("SELECT COUNT(a) > 0 FROM Appointment a WHERE a.doctor.id = :doctorId " +
+           "AND a.id <> :excludeAppointmentId " +
+           "AND a.status <> com.hospital.Enum.AppointmentStatus.CANCELLED " +
+           "AND a.appointmentTime > :startTime AND a.appointmentTime < :endTime")
+    boolean existsOverlappingAppointmentForReschedule(@Param("doctorId") Long doctorId,
+                                                      @Param("excludeAppointmentId") Long excludeAppointmentId,
+                                                      @Param("startTime") LocalDateTime startTime,
+                                                      @Param("endTime") LocalDateTime endTime);
+}
