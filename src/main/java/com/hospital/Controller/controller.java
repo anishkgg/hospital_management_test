@@ -7,10 +7,12 @@ import com.hospital.dto.requestDto.AppointmentCompleteRequestDTO;
 import com.hospital.dto.requestDto.AppointmentRequestDTO;
 import com.hospital.dto.requestDto.AppointmentRescheduleRequestDTO;
 import com.hospital.dto.requestDto.DoctorRequestDTO;
+import com.hospital.dto.requestDto.DoctorRegistrationDTO;
 import com.hospital.dto.requestDto.HospitalRequestDTO;
 import com.hospital.dto.responseDto.AppointmentBookingResponseDTO;
 import com.hospital.dto.responseDto.AppointmentResponseDTO;
 import com.hospital.dto.responseDto.DoctorResponseDTO;
+import com.hospital.dto.responseDto.DoctorDetailsResponseDTO;
 import com.hospital.dto.responseDto.HospitalResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,10 +40,10 @@ public class controller {
         return new ResponseEntity<>(createDoctor, HttpStatus.CREATED);
     }
 
-    @PostMapping("/addHospital")
-    public ResponseEntity<HospitalResponseDTO> addHospital (@RequestBody HospitalRequestDTO hospitalRequestDTO) {
-        HospitalResponseDTO createHospital = hospitalService.createHospital(hospitalRequestDTO);
-        return new ResponseEntity<>(createHospital, HttpStatus.CREATED);
+    @PostMapping("/addDoctors/schedule")
+    public ResponseEntity<DoctorDetailsResponseDTO> addDoctorWithSchedule (@RequestBody DoctorRegistrationDTO doctorRegistrationDTO) {
+        DoctorDetailsResponseDTO createDoctor = doctorService.createDoctorWithSchedule(doctorRegistrationDTO);
+        return new ResponseEntity<>(createDoctor, HttpStatus.CREATED);
     }
 
     @GetMapping("/getAllDoctors")
@@ -50,12 +52,18 @@ public class controller {
         return ResponseEntity.ok(doctors);
     }
 
+    @GetMapping("/getAllDoctors/schedule")
+    public ResponseEntity<List<DoctorDetailsResponseDTO>> getAllDoctorsWithSchedule() {
+        List<DoctorDetailsResponseDTO> doctors = doctorService.getAllDoctorsWithSchedule();
+        return ResponseEntity.ok(doctors);
+    }
+
     @GetMapping("/doctors/search")
-    public ResponseEntity<List<DoctorResponseDTO>> searchDoctors(
+    public ResponseEntity<List<DoctorDetailsResponseDTO>> searchDoctors(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "specialty", required = false) String specialty,
             @RequestParam(value = "city", required = false) String city) {
-        List<DoctorResponseDTO> doctors = doctorService.searchDoctors(name, specialty, city);
+        List<DoctorDetailsResponseDTO> doctors = doctorService.searchDoctorsWithSchedule(name, specialty, city);
         return ResponseEntity.ok(doctors);
     }
 

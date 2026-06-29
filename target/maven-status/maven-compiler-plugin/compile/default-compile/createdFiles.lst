@@ -10,8 +10,10 @@ com/hospital/dto/responseDto/HospitalResponseDTO$HospitalResponseDTOBuilder.clas
 com/hospital/dto/requestDto/AppointmentCompleteRequestDTO.class
 com/hospital/entity/Appointment.class
 com/hospital/Service/imp/DoctorServiceImpl.class
+com/hospital/dto/responseDto/DoctorDetailsResponseDTO.class
 com/hospital/Event/AppointmentCancelledEvent.class
 com/hospital/Event/NotificationEventListener.class
+com/hospital/dto/responseDto/DoctorDetailsResponseDTO$DoctorDetailsResponseDTOBuilder.class
 com/hospital/entity/Doctor.class
 com/hospital/dto/responseDto/AppointmentBookingResponseDTO.class
 com/hospital/dto/responseDto/DoctorResponseDTO$DoctorResponseDTOBuilder.class
@@ -26,12 +28,14 @@ com/hospital/entity/Hospital$HospitalBuilder.class
 com/hospital/repository/HospitalRepository.class
 com/hospital/Utils/ValidationUtils.class
 com/hospital/entity/Doctor$DoctorBuilder.class
+com/hospital/dto/requestDto/DoctorRegistrationDTO$DoctorRegistrationDTOBuilder.class
 com/hospital/entity/Hospital.class
 com/hospital/Enum/AppointmentStatus.class
 com/hospital/dto/requestDto/HospitalRequestDTO$HospitalRequestDTOBuilder.class
 com/hospital/dto/requestDto/HospitalRequestDTO.class
 com/hospital/Service/DoctorService.class
 com/hospital/dto/responseDto/AppointmentBookingResponseDTO$AppointmentBookingResponseDTOBuilder.class
+com/hospital/dto/requestDto/DoctorRegistrationDTO.class
 com/hospital/Event/AppointmentBookedEvent.class
 com/hospital/Service/imp/HospitalServiceImpl.class
 com/hospital/dto/responseDto/AppointmentResponseDTO$AppointmentResponseDTOBuilder.class

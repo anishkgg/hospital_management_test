@@ -3,6 +3,7 @@ package com.hospital.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,12 @@ public class Doctor {
 
     @Column(unique = true)
     private String licenseNumber;
+
+    private LocalTime shiftStart;
+
+    private LocalTime shiftEnd;
+
+    private String workingDays;
 
     @OneToMany(mappedBy = "doctor")
     private List<Appointment> appointments = new ArrayList<>();

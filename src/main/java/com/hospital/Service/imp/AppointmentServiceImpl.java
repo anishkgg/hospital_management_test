@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,6 +59,10 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .orElseThrow(() -> new IllegalArgumentException("Doctor is not Found"));
 
         LocalDateTime requestedTime = appointmentRequestDTO.appointmentTime();
+        
+        // Doctor shift and working day validations
+        validateDoctorShift(doctor, requestedTime);
+
         LocalDateTime startTime = requestedTime.minusMinutes(30);
         LocalDateTime endTime = requestedTime.plusMinutes(30);
 
@@ -167,6 +173,9 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new IllegalArgumentException("Appointment time must be in the future");
         }
 
+        // Doctor shift and working day validations
+        validateDoctorShift(appointment.getDoctor(), newTime);
+
         LocalDateTime startTime = newTime.minusMinutes(30);
         LocalDateTime endTime = newTime.plusMinutes(30);
 
@@ -181,6 +190,29 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setAppointmentTime(newTime);
         Appointment rescheduledAppointment = appointmentRepository.save(appointment);
         return convertToResponseDTO(rescheduledAppointment);
+    }
+
+    private void validateDoctorShift(Doctor doctor, LocalDateTime targetDateTime) {
+        DayOfWeek dayOfWeek = targetDateTime.getDayOfWeek();
+        LocalTime appointmentStart = targetDateTime.toLocalTime();
+        LocalTime appointmentEnd = appointmentStart.plusMinutes(30);
+
+        String workingDays = doctor.getWorkingDays();
+        if (workingDays == null || workingDays.isBlank()) {
+            workingDays = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY";
+        }
+
+        if (!workingDays.contains(dayOfWeek.name())) {
+            throw new IllegalArgumentException("Doctor does not work on " + dayOfWeek.name());
+        }
+
+        LocalTime shiftStart = doctor.getShiftStart() != null ? doctor.getShiftStart() : LocalTime.of(9, 0);
+        LocalTime shiftEnd = doctor.getShiftEnd() != null ? doctor.getShiftEnd() : LocalTime.of(17, 0);
+
+        if (appointmentStart.isBefore(shiftStart) || appointmentEnd.isAfter(shiftEnd)) {
+            throw new IllegalArgumentException("Requested time falls outside of the doctor's shift hours (" 
+                    + shiftStart + " to " + shiftEnd + ")");
+        }
     }
 
     private AppointmentResponseDTO convertToResponseDTO(Appointment appointment) {
