@@ -1,6 +1,8 @@
 package com.hospital.Service.imp;
 
 import com.hospital.Enum.AppointmentStatus;
+import com.hospital.Event.AppointmentBookedEvent;
+import com.hospital.Event.AppointmentCancelledEvent;
 import com.hospital.Service.AppointmentService;
 import com.hospital.Utils.AppointmentUtils;
 import com.hospital.dto.requestDto.AppointmentCompleteRequestDTO;
@@ -12,6 +14,7 @@ import com.hospital.entity.Doctor;
 import com.hospital.repository.AppointmentRepository;
 import com.hospital.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,6 +29,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     private DoctorRepository doctorRepository;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @Override
     public AppointmentBookingResponseDTO bookAppointment(AppointmentRequestDTO appointmentRequestDTO) {
@@ -58,6 +64,16 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .build();
 
         Appointment saveAppointment = appointmentRepository.save(appointment);
+
+        // Publish event for SMS/Email notification
+        eventPublisher.publishEvent(new AppointmentBookedEvent(
+                saveAppointment.getId(),
+                saveAppointment.getPatientName(),
+                saveAppointment.getPatientPhone(),
+                doctor.getName(),
+                saveAppointment.getAppointmentTime(),
+                saveAppointment.getBookingCode()
+        ));
 
         return AppointmentBookingResponseDTO.builder()
                 .bookingCode(saveAppointment.getBookingCode())
@@ -93,6 +109,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointment.setStatus(AppointmentStatus.CANCELLED);
         Appointment cancelledAppointment = appointmentRepository.save(appointment);
+
+        // Publish event for SMS/Email notification
+        eventPublisher.publishEvent(new AppointmentCancelledEvent(
+                cancelledAppointment.getId(),
+                cancelledAppointment.getPatientName(),
+                cancelledAppointment.getPatientPhone(),
+                cancelledAppointment.getBookingCode()
+        ));
+
         return convertToResponseDTO(cancelledAppointment);
     }
 

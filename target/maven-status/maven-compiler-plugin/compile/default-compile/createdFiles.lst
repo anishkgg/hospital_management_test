@@ -8,6 +8,8 @@ com/hospital/dto/responseDto/HospitalResponseDTO$HospitalResponseDTOBuilder.clas
 com/hospital/dto/requestDto/AppointmentCompleteRequestDTO.class
 com/hospital/entity/Appointment.class
 com/hospital/Service/imp/DoctorServiceImpl.class
+com/hospital/Event/AppointmentCancelledEvent.class
+com/hospital/Event/NotificationEventListener.class
 com/hospital/entity/Doctor.class
 com/hospital/dto/responseDto/AppointmentBookingResponseDTO.class
 com/hospital/dto/responseDto/DoctorResponseDTO$DoctorResponseDTOBuilder.class
@@ -28,6 +30,7 @@ com/hospital/dto/requestDto/HospitalRequestDTO$HospitalRequestDTOBuilder.class
 com/hospital/dto/requestDto/HospitalRequestDTO.class
 com/hospital/Service/DoctorService.class
 com/hospital/dto/responseDto/AppointmentBookingResponseDTO$AppointmentBookingResponseDTOBuilder.class
+com/hospital/Event/AppointmentBookedEvent.class
 com/hospital/Service/imp/HospitalServiceImpl.class
 com/hospital/dto/responseDto/AppointmentResponseDTO$AppointmentResponseDTOBuilder.class
 com/hospital/repository/DoctorRepository.class
