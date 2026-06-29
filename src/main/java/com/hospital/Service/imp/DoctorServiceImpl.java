@@ -68,6 +68,24 @@ public class DoctorServiceImpl implements DoctorService {
                         .phone(doctor.getPhone())
                         .hospitalId(doctor.getHospital() != null ? doctor.getHospital().getId() : null)
                         .hospitalName(doctor.getHospital() != null ? doctor.getHospital().getName() : "N/A")
+                        .licenseNumber(doctor.getLicenseNumber())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DoctorResponseDTO> searchDoctors(String name, String specialty, String city) {
+        List<Doctor> doctors = doctorRepository.searchDoctors(name, specialty, city);
+
+        return doctors.stream()
+                .map(doctor -> DoctorResponseDTO.builder()
+                        .id(doctor.getId())
+                        .name(doctor.getName())
+                        .specialty(doctor.getSpecialty())
+                        .phone(doctor.getPhone())
+                        .hospitalId(doctor.getHospital() != null ? doctor.getHospital().getId() : null)
+                        .hospitalName(doctor.getHospital() != null ? doctor.getHospital().getName() : "N/A")
+                        .licenseNumber(doctor.getLicenseNumber())
                         .build())
                 .collect(Collectors.toList());
     }

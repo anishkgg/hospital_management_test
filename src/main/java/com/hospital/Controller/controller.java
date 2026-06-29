@@ -48,6 +48,15 @@ public class controller {
         return ResponseEntity.ok(doctors);
     }
 
+    @GetMapping("/doctors/search")
+    public ResponseEntity<List<DoctorResponseDTO>> searchDoctors(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "specialty", required = false) String specialty,
+            @RequestParam(value = "city", required = false) String city) {
+        List<DoctorResponseDTO> doctors = doctorService.searchDoctors(name, specialty, city);
+        return ResponseEntity.ok(doctors);
+    }
+
     @GetMapping("/getAllHospitals")
     public ResponseEntity<List<HospitalResponseDTO>> getAllHospital() {
         List<HospitalResponseDTO> hospitals= hospitalService.getAllHospitals();
