@@ -41,6 +41,8 @@ public class Doctor {
 
     private String workingDays;
 
+    private Double rating;
+
     @OneToMany(mappedBy = "doctor")
     private List<Appointment> appointments = new ArrayList<>();
 }

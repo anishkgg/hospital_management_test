@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity Care - Hospital Management Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">⚓</div>
+            <div class="brand-name">Antigravity Care</div>
+        </div>
+        
+        <!-- Auth Status Panel -->
+        <div id="auth-panel" style="padding: 12px; border-bottom: 1px solid #1e293b; margin-bottom: 20px;">
+            <div id="auth-status-container">
+                <div style="font-size:10px; color:#64748b; font-weight:600; text-transform:uppercase; margin-bottom:4px;">Account Status</div>
+                <div id="auth-user-info" style="font-weight:600; font-size:13px; margin-bottom:10px; display:flex; align-items:center; gap:6px; color:#fff; word-break:break-all;">
+                    <span>👤</span> Guest User
+                </div>
+                <div id="auth-role-badge" class="badge" style="display:none; margin-bottom:10px; text-transform:uppercase; font-size:10px;">Guest</div>
+                <button class="btn btn-secondary btn-sm" id="btn-show-login" style="width:100%; border-color:#334155; background:#1e293b; color:#fff;">🔑 Sign In</button>
+                <button class="btn btn-secondary btn-sm" id="btn-logout" style="width:100%; display:none; border-color:#ef4444; background:#7f1d1d; color:#fff;">❌ Log Out</button>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <!-- Role-dependent navigation links -->
+            <div class="nav-item admin-only" data-target="dashboard-section" id="tab-dashboard" style="display:none;">
+                <span>📊</span> Dashboard
+            </div>
+            <div class="nav-item active" data-target="hospitals-section" id="tab-hospitals">
+                <span>🏥</span> Hospitals Catalog
+            </div>
+            <div class="nav-item" data-target="doctors-section" id="tab-doctors">
+                <span>🩺</span> Find Doctors
+            </div>
+            <div class="nav-item" data-target="appointments-section" id="tab-appointments">
+                <span>📅</span> Appointments
+            </div>
+            
+            <!-- Personal history trigger -->
+            <div class="nav-item" id="btn-personal-drawer" style="margin-top: auto; border-top: 1px solid #1e293b; padding-top: 16px;">
+                <span>👤</span> My Bookings
+            </div>
+        </nav>
+        
+        <div class="sidebar-footer">
+            v1.2.0 &copy; 2026
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        
+        <!-- Header -->
+        <header class="header">
+            <div class="header-title">
+                <h1 id="page-title">Hospitals Catalog</h1>
+                <p id="page-subtitle">Affiliated medical centers and institutions.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="btn-quick-appointment">⚡ Book Appointment</button>
+            </div>
+        </header>
+
+        <!-- DASHBOARD SECTION (Admin Only) -->
+        <section id="dashboard-section" class="section admin-only-section" style="display:none;">
+            <!-- Metrics Row -->
+            <div class="grid-stats">
+                <div class="card-stat">
+                    <div class="stat-icon">🏥</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="metric-hospitals">0</div>
+                        <div class="stat-label">Hospitals</div>
+                    </div>
+                </div>
+                <div class="card-stat">
+                    <div class="stat-icon">🩺</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="metric-doctors">0</div>
+                        <div class="stat-label">Doctors</div>
+                    </div>
+                </div>
+                <div class="card-stat">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="metric-appointments">0</div>
+                        <div class="stat-label">Total Appointments</div>
+                    </div>
+                </div>
+                <div class="card-stat">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="metric-completion">0%</div>
+                        <div class="stat-label">Completion Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Details Grid -->
+            <div class="grid-dashboard">
+                <!-- Analytics Report Card -->
+                <div class="card">
+                    <div class="card-title-bar">
+                        <h3>Appointments by Hospital</h3>
+                        <span class="badge active">Analytics</span>
+                    </div>
+                    <div class="chart-container" id="analytics-chart-container">
+                        <svg class="svg-chart" id="analytics-svg" viewBox="0 0 500 250">
+                            <!-- SVG generated dynamically by JS -->
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Feed -->
+                <div class="card">
+                    <div class="card-title-bar">
+                        <h3>Upcoming Shifts</h3>
+                    </div>
+                    <div id="dashboard-shifts-container">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">⏰</div>
+                            <h4>No shifts scheduled</h4>
+                            <p>Add doctors with working hours to see them here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOSPITALS SECTION -->
+        <section id="hospitals-section" class="section active">
+            <div class="filter-bar">
+                <div class="form-group-filter" style="flex: 2;">
+                    <h3 style="font-family:'Outfit'; font-weight:700;">Medical Institutions</h3>
+                    <p style="color:var(--text-muted); font-size:13px; margin-top:2px;">Select a hospital to view coordinates and ratings.</p>
+                </div>
+                
+                <!-- Client near me checkbox -->
+                <div class="form-group-filter" style="flex: 1; min-width: 140px; margin-bottom: 2px;">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:600; text-transform:none;">
+                        <input type="checkbox" id="chk-near-me" style="width: 16px; height: 16px; accent-color: var(--primary);"> 📍 Hospitals Near Me
+                    </label>
+                </div>
+                
+                <button class="btn btn-primary admin-only" id="btn-add-hospital" style="display:none;">➕ Add Hospital</button>
+            </div>
+            
+            <div class="card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Hospital Name</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>Phone</th>
+                                <th>Rating</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hospitals-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="hospitals-empty-state" class="empty-state" style="display:none;">
+                    <div class="empty-state-icon">🏥</div>
+                    <h4>No hospitals found</h4>
+                    <p>There are no hospitals registered in this category.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- DOCTORS SECTION -->
+        <section id="doctors-section" class="section">
+            <div class="filter-bar">
+                <div class="form-group-filter">
+                    <label>Doctor Name</label>
+                    <input type="text" class="form-control" id="search-doctor-name" placeholder="Filter by name...">
+                </div>
+                <div class="form-group-filter">
+                    <label>Specialty</label>
+                    <input type="text" class="form-control" id="search-doctor-specialty" placeholder="e.g. Cardiology...">
+                </div>
+                <div class="form-group-filter">
+                    <label>City</label>
+                    <input type="text" class="form-control" id="search-doctor-city" placeholder="e.g. New York...">
+                </div>
+                <button class="btn btn-secondary" id="btn-search-doctors">🔍 Filter</button>
+                <button class="btn btn-primary admin-only" id="btn-add-doctor" style="display:none;">➕ Register Doctor</button>
+            </div>
+
+            <div id="doctors-grid" class="grid-cards">
+                <!-- Doctor cards generated dynamically -->
+            </div>
+            <div id="doctors-empty-state" class="empty-state" style="display:none;">
+                <div class="empty-state-icon">🩺</div>
+                <h4>No matching doctors found</h4>
+                <p>Register a new doctor or adjust search filters.</p>
+            </div>
+        </section>
+
+        <!-- APPOINTMENTS SECTION -->
+        <section id="appointments-section" class="section">
+            <!-- Search & Details Card -->
+            <div class="filter-bar">
+                <div class="form-group-filter" style="flex: 2;">
+                    <label>Booking Code Lookup</label>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" class="form-control" id="search-booking-code" placeholder="Enter 10-char alphanumeric booking code...">
+                        <button class="btn btn-primary" id="btn-lookup-booking">Search</button>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="btn-create-appointment">📅 Book Appointment</button>
+            </div>
+
+            <div id="lookup-result-card" class="card" style="display:none;">
+                <div class="card-title-bar">
+                    <h3>Booking Details</h3>
+                    <span class="badge" id="lookup-status">Status</span>
+                </div>
+                <div class="form-grid" style="margin-bottom: 16px;">
+                    <div class="info-card-detail"><span class="label">Patient Name:</span><span class="val" id="lookup-patient-name">-</span></div>
+                    <div class="info-card-detail"><span class="label">Email:</span><span class="val" id="lookup-patient-email">-</span></div>
+                    <div class="info-card-detail"><span class="label">Phone:</span><span class="val" id="lookup-patient-phone">-</span></div>
+                    <div class="info-card-detail"><span class="label">Booking Code:</span><span class="val" style="font-family:monospace; font-weight:700;" id="lookup-code">-</span></div>
+                    <div class="info-card-detail"><span class="label">Doctor Assigned:</span><span class="val" id="lookup-doctor-name">-</span></div>
+                    <div class="info-card-detail"><span class="label">Appointment Time:</span><span class="val" id="lookup-time">-</span></div>
+                </div>
+                <div class="form-group-full" style="margin-bottom: 20px; display:none;" id="lookup-notes-container">
+                    <label style="font-weight:600; display:block; margin-bottom:4px; font-size:13px;">Medical Notes:</label>
+                    <div style="background-color:var(--secondary); padding:12px; border-radius:var(--border-radius-sm); font-size:13px; white-space:pre-wrap;" id="lookup-notes">-</div>
+                </div>
+                <div class="action-buttons" id="lookup-actions">
+                    <!-- Actions generated depending on appointment status -->
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title-bar">
+                    <h3>Appointments Schedule</h3>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Booking Code</th>
+                                <th>Patient Name</th>
+                                <th>Assigned Doctor</th>
+                                <th>Date & Time</th>
+                                <th>Status</th>
+                                <th class="admin-only" style="display:none;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="appointments-empty-state" class="empty-state" style="display:none;">
+                    <div class="empty-state-icon">📅</div>
+                    <h4>No appointments scheduled yet</h4>
+                    <p>Start booking appointments for registered doctors.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- AUTH MODAL (LOGIN / REGISTER) -->
+    <div class="modal" id="modal-auth">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 id="auth-modal-title">Sign In</h3>
+                <button class="modal-close" data-close="modal-auth">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-auth">
+                    <div class="form-group">
+                        <label>Username *</label>
+                        <input type="text" class="form-control" id="auth-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password *</label>
+                        <input type="password" class="form-control" id="auth-password" required>
+                    </div>
+                    <div id="auth-error-msg" style="color:var(--status-cancelled); font-size:12px; font-weight:600; display:none; margin-bottom:12px; background:#fef2f2; padding:8px; border-radius:4px;"></div>
+                </form>
+            </div>
+            <div class="modal-footer" style="flex-direction:column; gap:12px; align-items:stretch;">
+                <button class="btn btn-primary" id="btn-submit-auth" style="width:100%;">Sign In</button>
+                <div style="text-align:center; font-size:13px; color:var(--text-muted);">
+                    <span id="auth-toggle-prompt">New to the platform?</span> 
+                    <a href="#" id="link-toggle-auth" style="color:var(--primary); font-weight:600; text-decoration:none; margin-left:4px;">Register Client</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOSPITAL CREATION MODAL -->
+    <div class="modal" id="modal-hospital">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Hospital</h3>
+                <button class="modal-close" data-close="modal-hospital">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-hospital">
+                    <div class="form-group">
+                        <label>Hospital Name *</label>
+                        <input type="text" class="form-control" id="hospital-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Address *</label>
+                        <input type="text" class="form-control" id="hospital-address" required>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>City *</label>
+                            <input type="text" class="form-control" id="hospital-city" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone *</label>
+                            <input type="text" class="form-control" id="hospital-phone" placeholder="e.g. +1234567890" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Rating (1.0 to 5.0) *</label>
+                        <input type="number" class="form-control" id="hospital-rating" min="1.0" max="5.0" step="0.1" value="5.0" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-close="modal-hospital">Cancel</button>
+                <button class="btn btn-primary" id="btn-submit-hospital">Save Hospital</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOCTOR REGISTRATION MODAL -->
+    <div class="modal" id="modal-doctor">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Register Doctor</h3>
+                <button class="modal-close" data-close="modal-doctor">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-doctor">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Doctor Name *</label>
+                            <input type="text" class="form-control" id="doctor-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Specialty *</label>
+                            <input type="text" class="form-control" id="doctor-specialty" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" class="form-control" id="doctor-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone *</label>
+                            <input type="text" class="form-control" id="doctor-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label>License Number *</label>
+                            <input type="text" class="form-control" id="doctor-license" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Affiliated Hospital *</label>
+                            <select class="form-control" id="doctor-hospital" required>
+                                <option value="">Select Hospital...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Shift Start Time *</label>
+                            <input type="time" class="form-control" id="doctor-shift-start" value="09:00" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Shift End Time *</label>
+                            <input type="time" class="form-control" id="doctor-shift-end" value="17:00" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Rating (1.0 to 5.0) *</label>
+                            <input type="number" class="form-control" id="doctor-rating" min="1.0" max="5.0" step="0.1" value="5.0" required>
+                        </div>
+                        <div class="form-group">
+                            <!-- empty slot for grid alignment -->
+                        </div>
+                        <div class="form-group form-group-full">
+                            <label>Working Days * (Comma-separated)</label>
+                            <input type="text" class="form-control" id="doctor-working-days" placeholder="Monday, Tuesday, Wednesday..." value="Monday, Tuesday, Wednesday, Thursday, Friday" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-close="modal-doctor">Cancel</button>
+                <button class="btn btn-primary" id="btn-submit-doctor">Register</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOK APPOINTMENT MODAL -->
+    <div class="modal" id="modal-appointment">
+        <div class="modal-content" style="max-width: 550px;">
+            <div class="modal-header">
+                <h3>Book Appointment</h3>
+                <button class="modal-close" data-close="modal-appointment">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Check if logged in helper message -->
+                <div id="apt-auth-required-msg" style="display:none; background:#fffbeb; color:#b45309; padding:12px; border-radius:6px; font-size:13px; font-weight:600; margin-bottom:16px;">
+                    ⚠️ Please Sign In first to book an appointment.
+                </div>
+                
+                <form id="form-appointment">
+                    <div class="form-group">
+                        <label>Patient Full Name *</label>
+                        <input type="text" class="form-control" id="apt-patient-name" required>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Phone *</label>
+                            <input type="text" class="form-control" id="apt-patient-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" class="form-control" id="apt-patient-email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Hospital *</label>
+                        <select class="form-control" id="apt-hospital-select" required>
+                            <option value="">Select Hospital...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Doctor *</label>
+                        <select class="form-control" id="apt-doctor-select" required disabled>
+                            <option value="">Choose a hospital first...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Date *</label>
+                        <input type="date" class="form-control" id="apt-date-select" required disabled>
+                    </div>
+                    
+                    <!-- Dynamic Slots Area -->
+                    <div id="apt-slots-container" style="display:none; margin-top:20px;">
+                        <label style="display:block; margin-bottom:8px; font-weight:600; font-size:13px;">Available Shift Slots (30 mins)</label>
+                        <div id="apt-slots-grid" class="slots-grid">
+                            <!-- Slots filled by JS -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-close="modal-appointment">Cancel</button>
+                <button class="btn btn-primary" id="btn-submit-appointment" disabled>Confirm Booking</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESCHEDULE APPOINTMENT MODAL -->
+    <div class="modal" id="modal-reschedule">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Reschedule Appointment</h3>
+                <button class="modal-close" data-close="modal-reschedule">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-reschedule">
+                    <input type="hidden" id="reschedule-apt-id">
+                    <div class="form-group">
+                        <label>Select Date *</label>
+                        <input type="date" class="form-control" id="reschedule-date-select" required>
+                    </div>
+                    
+                    <!-- Dynamic Slots Area for reschedule -->
+                    <div id="reschedule-slots-container" style="display:none; margin-top:20px;">
+                        <label style="display:block; margin-bottom:8px; font-weight:600; font-size:13px;">Available Slots</label>
+                        <div id="reschedule-slots-grid" class="slots-grid">
+                            <!-- Slots filled by JS -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-close="modal-reschedule">Cancel</button>
+                <button class="btn btn-primary" id="btn-submit-reschedule" disabled>Confirm Reschedule</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPLETE APPOINTMENT MODAL -->
+    <div class="modal" id="modal-complete">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Complete Appointment</h3>
+                <button class="modal-close" data-close="modal-complete">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-complete">
+                    <input type="hidden" id="complete-apt-id">
+                    <div class="form-group">
+                        <label>Medical Diagnosis / Treatment Notes</label>
+                        <textarea class="form-control" id="complete-notes" rows="6" placeholder="Enter clinical notes, prescriptions, or summary..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-close="modal-complete">Cancel</button>
+                <button class="btn btn-primary" id="btn-submit-complete">Complete Session</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PERSONAL APPOINTMENTS HISTORY DRAWER -->
+    <div class="modal" id="drawer-personal">
+        <div class="modal-content" style="max-width: 500px; position: fixed; right: 0; top: 0; bottom: 0; height: 100vh; margin: 0; border-radius: 0; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: var(--shadow-lg);">
+            <div class="modal-header">
+                <h3>My Bookings History</h3>
+                <button class="modal-close" data-close="drawer-personal">&times;</button>
+            </div>
+            <div class="modal-body" style="height: calc(100vh - 120px); overflow-y: auto;">
+                <!-- Check if logged in helper message -->
+                <div id="drawer-auth-required-msg" style="display:none; background:#fffbeb; color:#b45309; padding:12px; border-radius:6px; font-size:13px; font-weight:600; margin-bottom:16px;">
+                    ⚠️ Please Sign In first to query your bookings.
+                </div>
+                
+                <div class="form-group">
+                    <label>Enter Patient Phone Number or Email *</label>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" class="form-control" id="personal-contact-input" placeholder="e.g. 9876543211 or charlie@gmail.com">
+                        <button class="btn btn-primary" id="btn-personal-lookup">Lookup</button>
+                    </div>
+                </div>
+                
+                <div id="personal-bookings-results" style="margin-top:24px;">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👤</div>
+                        <h4>Lookup Bookings</h4>
+                        <p>Search by your contact number or email to view past schedules.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

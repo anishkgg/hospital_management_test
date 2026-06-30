@@ -13,5 +13,6 @@ public record DoctorRegistrationDTO(
         String licenseNumber,
         LocalTime shiftStart,
         LocalTime shiftEnd,
-        String workingDays
+        String workingDays,
+        Double rating
 ) {}

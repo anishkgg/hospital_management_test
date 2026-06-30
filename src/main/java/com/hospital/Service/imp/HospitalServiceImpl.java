@@ -33,6 +33,7 @@ public class HospitalServiceImpl implements HospitalService {
                 .address(hospitalRequestDTO.address())
                 .phone(hospitalRequestDTO.phone())
                 .city(hospitalRequestDTO.city())
+                .rating(hospitalRequestDTO.rating() != null ? hospitalRequestDTO.rating() : 5.0)
                 .build();
 
         Hospital saveHospital = hospitalRepository.save(hospital);
@@ -43,6 +44,7 @@ public class HospitalServiceImpl implements HospitalService {
                 .address(saveHospital.getAddress())
                 .phone(saveHospital.getPhone())
                 .city(saveHospital.getCity())
+                .rating(saveHospital.getRating())
                 .build();
     }
 
@@ -57,6 +59,7 @@ public class HospitalServiceImpl implements HospitalService {
                         .address(hospital.getAddress())
                         .phone(hospital.getPhone())
                         .city(hospital.getCity())
+                        .rating(hospital.getRating() != null ? hospital.getRating() : 5.0)
                         .build())
                 .collect(Collectors.toList());
     }

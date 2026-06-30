@@ -8,5 +8,6 @@ public record HospitalResponseDTO(
         String name,
         String address,
         String phone,
-        String city
+        String city,
+        Double rating
 ) {}

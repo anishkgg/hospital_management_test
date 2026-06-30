@@ -15,5 +15,6 @@ public record DoctorDetailsResponseDTO(
         String licenseNumber,
         LocalTime shiftStart,
         LocalTime shiftEnd,
-        String workingDays
+        String workingDays,
+        Double rating
 ) {}

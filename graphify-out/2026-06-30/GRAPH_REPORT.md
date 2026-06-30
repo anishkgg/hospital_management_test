@@ -1,15 +1,16 @@
-# Graph Report - .  (2026-06-30)
+# Graph Report - hospital_management_test  (2026-06-30)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 42 files · ~7,115 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 299 nodes · 621 edges · 16 communities (12 shown, 4 thin omitted)
-- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 33 edges (avg confidence: 0.8)
+- 326 nodes · 653 edges · 21 communities (14 shown, 7 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 32 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `fa97ade9`
+- Built from commit: `15e6982e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -30,6 +31,11 @@
 - [[_COMMUNITY_Community 13|Community 13]]
 - [[_COMMUNITY_Community 14|Community 14]]
 - [[_COMMUNITY_Community 15|Community 15]]
+- [[_COMMUNITY_Community 16|Community 16]]
+- [[_COMMUNITY_Community 17|Community 17]]
+- [[_COMMUNITY_Community 18|Community 18]]
+- [[_COMMUNITY_Community 19|Community 19]]
+- [[_COMMUNITY_Community 20|Community 20]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `AppointmentResponseDTO` - 25 edges
@@ -50,10 +56,10 @@
   src/main/java/com/hospital/Controller/controller.java → src/main/java/com/hospital/Service/AppointmentService.java
 - `controller` --references--> `DoctorService`  [EXTRACTED]
   src/main/java/com/hospital/Controller/controller.java → src/main/java/com/hospital/Service/DoctorService.java
+- `controller` --references--> `HospitalService`  [EXTRACTED]
+  src/main/java/com/hospital/Controller/controller.java → src/main/java/com/hospital/Service/HospitalService.java
 - `controller` --references--> `ReportService`  [EXTRACTED]
   src/main/java/com/hospital/Controller/controller.java → src/main/java/com/hospital/Service/ReportService.java
-- `Appointment` --references--> `AppointmentStatus`  [EXTRACTED]
-  src/main/java/com/hospital/entity/Appointment.java → src/main/java/com/hospital/Enum/AppointmentStatus.java
 
 ## Import Cycles
 - None detected.
@@ -62,39 +68,39 @@
 - **Container Deployment Configuration** — compose_debug_hospitalmanagementtest, compose_hospitalmanagementtest, dockerfile [EXTRACTED 1.00]
 - **Graphify Agent Tooling** — agents_rules_graphify_rule, agents_workflows_graphify_workflow [EXTRACTED 1.00]
 
-## Communities (16 total, 4 thin omitted)
+## Communities (21 total, 7 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.07
-Nodes (30): Pattern, DoctorRegistrationDTO, Builder, LocalTime, Long, String, DoctorRequestDTO, Builder (+22 more)
+Nodes (32): IllegalArgumentException, Pattern, DoctorDetailsResponseDTO, Builder, LocalTime, Long, String, Doctor (+24 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.11
-Nodes (19): GetMapping, PostMapping, PutMapping, RequestMapping, RestController, controller, List, Long (+11 more)
+Cohesion: 0.20
+Nodes (10): GetMapping, PostMapping, PutMapping, RequestMapping, RestController, controller, List, Long (+2 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.10
-Nodes (21): Optional, SecureRandom, Appointment, AllArgsConstructor, Builder, Data, Entity, LocalDateTime (+13 more)
+Cohesion: 0.19
+Nodes (10): Optional, SecureRandom, AppointmentRepository, LocalDateTime, Long, Query, Repository, String (+2 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.11
-Nodes (20): AppointmentRequestDTO, LocalDateTime, Long, String, AppointmentRescheduleRequestDTO, LocalDateTime, AppointmentBookingResponseDTO, Builder (+12 more)
+Cohesion: 0.08
+Nodes (28): ApplicationEventPublisher, AppointmentCompleteRequestDTO, String, AppointmentRescheduleRequestDTO, LocalDateTime, AppointmentResponseDTO, Builder, LocalDateTime (+20 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.13
-Nodes (18): ApplicationEventPublisher, IllegalArgumentException, AppointmentCompleteRequestDTO, String, AppointmentBookedEvent, LocalDateTime, Long, String (+10 more)
+Cohesion: 0.11
+Nodes (25): Pageable, AppointmentBookingResponseDTO, Builder, LocalDateTime, String, Appointment, AllArgsConstructor, Builder (+17 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.13
-Nodes (17): Double, Pageable, HospitalReportDTO, Builder, Long, String, AppointmentReportRepository, List (+9 more)
+Cohesion: 0.14
+Nodes (12): Double, AppointmentRequestDTO, LocalDateTime, Long, String, HospitalReportDTO, Builder, Long (+4 more)
 
 ### Community 6 - "Community 6"
-Cohesion: 0.11
-Nodes (19): Hospital, AllArgsConstructor, Builder, Data, Entity, List, Long, NoArgsConstructor (+11 more)
+Cohesion: 0.16
+Nodes (13): HospitalRequestDTO, Builder, String, HospitalResponseDTO, Builder, Long, String, HospitalService (+5 more)
 
 ### Community 7 - "Community 7"
-Cohesion: 0.13
-Nodes (18): JpaRepository, Doctor, AllArgsConstructor, Builder, Data, Entity, List, LocalTime (+10 more)
+Cohesion: 0.12
+Nodes (16): DoctorRegistrationDTO, Builder, LocalTime, Long, String, DoctorRequestDTO, Builder, Long (+8 more)
 
 ### Community 8 - "Community 8"
 Cohesion: 0.36
@@ -112,25 +118,33 @@ Nodes (6): ExceptionHandler, Map, RestControllerAdvice, GlobalExceptionHandler, 
 Cohesion: 0.47
 Nodes (4): EnableAsync, SpringBootApplication, HospitalManagementApplication, String
 
+### Community 19 - "Community 19"
+Cohesion: 0.13
+Nodes (11): drawAnalyticsChart(), fetchAppointments(), fetchDoctors(), fetchHospitals(), formatDateTime(), loadAllData(), loadDashboardData(), renderDashboardShifts() (+3 more)
+
+### Community 20 - "Community 20"
+Cohesion: 0.13
+Nodes (16): JpaRepository, Hospital, AllArgsConstructor, Builder, Data, Entity, List, Long (+8 more)
+
 ## Knowledge Gaps
-- **4 isolated node(s):** `com.hospital:hospital-management-test`, `My Project`, `Graphify Agent Rule`, `Graphify Workflow`
+- **7 isolated node(s):** `com.hospital:hospital-management-test`, `state`, `graphify`, `Workflow: graphify`, `My Project` (+2 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Doctor` connect `Community 7` to `Community 0`, `Community 2`, `Community 4`, `Community 6`?**
-  _High betweenness centrality (0.144) - this node is a cross-community bridge._
-- **Why does `AppointmentResponseDTO` connect `Community 3` to `Community 1`, `Community 4`?**
-  _High betweenness centrality (0.106) - this node is a cross-community bridge._
-- **Why does `Appointment` connect `Community 2` to `Community 3`, `Community 4`, `Community 5`, `Community 7`?**
-  _High betweenness centrality (0.093) - this node is a cross-community bridge._
-- **What connects `com.hospital:hospital-management-test`, `My Project`, `Graphify Agent Rule` to the rest of the system?**
-  _4 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Why does `Doctor` connect `Community 0` to `Community 3`, `Community 4`, `Community 20`?**
+  _High betweenness centrality (0.121) - this node is a cross-community bridge._
+- **Why does `AppointmentResponseDTO` connect `Community 3` to `Community 1`, `Community 4`, `Community 5`?**
+  _High betweenness centrality (0.089) - this node is a cross-community bridge._
+- **Why does `Appointment` connect `Community 4` to `Community 0`, `Community 2`, `Community 3`?**
+  _High betweenness centrality (0.079) - this node is a cross-community bridge._
+- **What connects `com.hospital:hospital-management-test`, `state`, `graphify` to the rest of the system?**
+  _7 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.07256894049346879 - nodes in this community are weakly interconnected._
-- **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.11201079622132254 - nodes in this community are weakly interconnected._
-- **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.1010752688172043 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07294117647058823 - nodes in this community are weakly interconnected._
+- **Should `Community 3` be split into smaller, more focused modules?**
+  _Cohesion score 0.08233117483811286 - nodes in this community are weakly interconnected._
+- **Should `Community 4` be split into smaller, more focused modules?**
+  _Cohesion score 0.10756302521008404 - nodes in this community are weakly interconnected._

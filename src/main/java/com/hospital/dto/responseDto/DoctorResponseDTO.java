@@ -11,5 +11,6 @@ public record DoctorResponseDTO(
         String email,
         Long hospitalId,
         String hospitalName,
-        String licenseNumber
+        String licenseNumber,
+        Double rating
 ) {}

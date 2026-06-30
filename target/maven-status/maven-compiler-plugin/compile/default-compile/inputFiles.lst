@@ -2,6 +2,7 @@
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/dto/responseDto/HospitalResponseDTO.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/dto/requestDto/HospitalRequestDTO.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/dto/requestDto/AppointmentRequestDTO.java
+/Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/Controller/AuthController.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/Service/imp/AppointmentServiceImpl.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/Event/AppointmentBookedEvent.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/Controller/controller.java
@@ -13,6 +14,8 @@
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/dto/requestDto/DoctorRequestDTO.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/dto/requestDto/AppointmentRescheduleRequestDTO.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/Event/NotificationEventListener.java
+/Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/config/DataInitializer.java
+/Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/Service/imp/UserDetailsServiceImpl.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/Enum/AppointmentStatus.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/Service/ReportService.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/entity/Appointment.java
@@ -22,6 +25,7 @@
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/Controller/GlobalExceptionHandler.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/Utils/AppointmentUtils.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/repository/AppointmentReportRepository.java
+/Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/config/SecurityConfig.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/Service/DoctorService.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/repository/DoctorRepository.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/config/DatabaseConnection.java
@@ -32,6 +36,8 @@
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/dto/requestDto/DoctorRegistrationDTO.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/Utils/ValidationUtils.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/dto/responseDto/DoctorDetailsResponseDTO.java
+/Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/entity/User.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/dto/requestDto/AppointmentCompleteRequestDTO.java
+/Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/repository/UserRepository.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/entity/Hospital.java
 /Users/anishraj/Documents/Project/hospital_management_test/src/main/java/com/hospital/Service/AppointmentService.java

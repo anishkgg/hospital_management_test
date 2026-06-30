@@ -26,6 +26,8 @@ public class Hospital {
 
     private String city;
 
+    private Double rating;
+
     @OneToMany(mappedBy = "hospital")
     private List<Doctor> doctors = new ArrayList<>();
 }

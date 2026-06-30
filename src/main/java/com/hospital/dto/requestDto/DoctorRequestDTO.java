@@ -14,4 +14,5 @@ public record DoctorRequestDTO(String name,
                                String phone,
                                String email,
                                Long hospitalId,
-                               String licenseNumber) {}
+                               String licenseNumber,
+                               Double rating) {}

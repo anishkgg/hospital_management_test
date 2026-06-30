@@ -7,6 +7,7 @@ public record HospitalRequestDTO(
         String hospitalName,
         String address,
         String phone,
-        String city
+        String city,
+        Double rating
 ) {
 }

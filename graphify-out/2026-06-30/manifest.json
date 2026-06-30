@@ -188,5 +188,40 @@
     "mtime": 1782385258.337993,
     "ast_hash": "c040a944b637c8745907bc95e760559a",
     "semantic_hash": "c040a944b637c8745907bc95e760559a"
+  },
+  ".agents/rules/graphify.md": {
+    "mtime": 1782823945.0209358,
+    "ast_hash": "f1e53ecc9194573d3c28fc116c743a2e",
+    "semantic_hash": ""
+  },
+  ".agents/workflows/graphify.md": {
+    "mtime": 1782823945.0210664,
+    "ast_hash": "0bc020d491fca99550c1ea3de0a5f862",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1782267388.1318998,
+    "ast_hash": "efc018d1a45c682c37f16095b1435cea",
+    "semantic_hash": ""
+  },
+  "compose.debug.yaml": {
+    "mtime": 1782823482.6777518,
+    "ast_hash": "17732575caf3eeb931934e3c9d562bc7",
+    "semantic_hash": ""
+  },
+  "compose.yaml": {
+    "mtime": 1782823482.675961,
+    "ast_hash": "72a66a454845ee1c69a04b30127f70b0",
+    "semantic_hash": ""
+  },
+  "src/main/resources/static/app.js": {
+    "mtime": 1782837125.7174234,
+    "ast_hash": "2a4fc4a1675e4f87b03f6eebaff5ad2f",
+    "semantic_hash": ""
+  },
+  "src/main/resources/static/index.html": {
+    "mtime": 1782835770.5160966,
+    "ast_hash": "b220edd935667df4531d766ee5094bf6",
+    "semantic_hash": ""
   }
 }

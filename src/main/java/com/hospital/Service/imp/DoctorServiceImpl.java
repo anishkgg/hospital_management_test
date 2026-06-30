@@ -57,6 +57,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .shiftStart(LocalTime.of(9, 0))
                 .shiftEnd(LocalTime.of(17, 0))
                 .workingDays("MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY")
+                .rating(doctorRequestDTO.rating() != null ? doctorRequestDTO.rating() : 5.0)
                 .build();
 
         Doctor savedDoctor = doctorRepository.save(doctor);
@@ -70,6 +71,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .hospitalId(hospital.getId())
                 .hospitalName(hospital.getName())
                 .licenseNumber(savedDoctor.getLicenseNumber())
+                .rating(savedDoctor.getRating())
                 .build();
     }
 
@@ -110,6 +112,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .shiftStart(start)
                 .shiftEnd(end)
                 .workingDays(days)
+                .rating(dto.rating() != null ? dto.rating() : 5.0)
                 .build();
 
         Doctor savedDoctor = doctorRepository.save(doctor);
@@ -131,6 +134,7 @@ public class DoctorServiceImpl implements DoctorService {
                         .hospitalId(doctor.getHospital() != null ? doctor.getHospital().getId() : null)
                         .hospitalName(doctor.getHospital() != null ? doctor.getHospital().getName() : "N/A")
                         .licenseNumber(doctor.getLicenseNumber())
+                        .rating(doctor.getRating() != null ? doctor.getRating() : 5.0)
                         .build())
                 .collect(Collectors.toList());
     }
@@ -166,6 +170,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .shiftStart(doctor.getShiftStart() != null ? doctor.getShiftStart() : LocalTime.of(9, 0))
                 .shiftEnd(doctor.getShiftEnd() != null ? doctor.getShiftEnd() : LocalTime.of(17, 0))
                 .workingDays(doctor.getWorkingDays() != null ? doctor.getWorkingDays() : "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY")
+                .rating(doctor.getRating() != null ? doctor.getRating() : 5.0)
                 .build();
     }
 }
