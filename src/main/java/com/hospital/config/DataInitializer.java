@@ -19,14 +19,14 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Seed default Admin if not exists
-        if (!userRepository.existsByUsername("admin")) {
+        if (!userRepository.existsByUsername("anishraj1132")) {
             User admin = User.builder()
-                    .username("admin")
-                    .password(passwordEncoder.encode("admin123"))
+                    .username("anishraj1132")
+                    .password(passwordEncoder.encode("Anishraj@1132"))
                     .role("ROLE_ADMIN")
                     .build();
             userRepository.save(admin);
-            System.out.println("[Database Seeder] Default Admin created: admin / admin123");
+            System.out.println("[Database Seeder] Default Admin created: anishraj1132 / Anishraj@1132");
         }
 
         // Seed default Client if not exists
