@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Antigravity Care - Hospital Management Platform</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -281,6 +282,20 @@
                 <button class="modal-close" data-close="modal-auth">&times;</button>
             </div>
             <div class="modal-body">
+                <!-- Google Authentication Panel -->
+                <div style="margin-bottom: 20px;">
+                    <button type="button" class="btn btn-social-google" id="btn-google-login">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo" style="width: 18px; height: 18px; margin-right: 10px;">
+                        Continue with Google
+                    </button>
+                    <!-- Official Google One-Tap/Button rendering container -->
+                    <div id="g_id_signin" style="display:none; justify-content:center;"></div>
+                </div>
+
+                <div class="or-separator">
+                    <span class="or-text">or</span>
+                </div>
+
                 <form id="form-auth">
                     <div class="form-group">
                         <label>Username *</label>

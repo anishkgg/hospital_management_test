@@ -28,6 +28,7 @@ com/hospital/dto/requestDto/DoctorRequestDTO$DoctorRequestDTOBuilder.class
 com/hospital/dto/requestDto/DoctorRequestDTO.class
 com/hospital/repository/UserRepository.class
 com/hospital/Service/AppointmentService.class
+com/hospital/Controller/AuthController$GoogleAuthRequest.class
 com/hospital/dto/responseDto/HospitalResponseDTO.class
 com/hospital/repository/AppointmentReportRepository.class
 com/hospital/dto/responseDto/HospitalResponseDTO$HospitalResponseDTOBuilder.class

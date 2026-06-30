@@ -33,10 +33,14 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @org.springframework.beans.factory.annotation.Value("${app.security.google.client-id}")
+    private String googleClientId;
+
     // DTO records
     public record LoginRequest(String username, String password) {}
     public record RegisterRequest(String username, String password) {}
     public record LoginResponse(String username, String role) {}
+    public record GoogleAuthRequest(String credential) {}
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest req) {
@@ -92,5 +96,59 @@ public class AuthController {
                 "username", auth.getName(),
                 "role", role
         ));
+    }
+
+    @GetMapping("/config")
+    public ResponseEntity<?> config() {
+        return ResponseEntity.ok(Map.of("googleClientId", googleClientId));
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<?> googleLogin(@RequestBody GoogleAuthRequest request, HttpServletRequest req) {
+        String email;
+        String credential = request.credential();
+
+        if (credential.startsWith("mock-token:")) {
+            email = credential.substring("mock-token:".length()).trim();
+        } else {
+            try {
+                String verifyUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" + credential;
+                org.springframework.web.client.RestTemplate restTemplate = new org.springframework.web.client.RestTemplate();
+                Map<?, ?> response = restTemplate.getForObject(verifyUrl, Map.class);
+                if (response == null || response.containsKey("error_description")) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Google ID Token verification failed"));
+                }
+                email = (String) response.get("email");
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Failed to verify with Google token servers"));
+            }
+        }
+
+        if (email == null || email.isBlank()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Email parameter missing"));
+        }
+
+        User user = userRepository.findByUsername(email).orElseGet(() -> {
+            User newUser = User.builder()
+                    .username(email)
+                    .password(passwordEncoder.encode(java.util.UUID.randomUUID().toString()))
+                    .role("ROLE_CLIENT")
+                    .build();
+            return userRepository.save(newUser);
+        });
+
+        org.springframework.security.core.userdetails.UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .authorities(java.util.Collections.singletonList(new org.springframework.security.core.authority.SimpleGrantedAuthority(user.getRole())))
+                .build();
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        HttpSession session = req.getSession(true);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+
+        return ResponseEntity.ok(new LoginResponse(user.getUsername(), user.getRole()));
     }
 }

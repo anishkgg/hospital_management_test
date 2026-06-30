@@ -866,4 +866,57 @@ body.guest-mode #tab-appointments {
     display: inline-block !important;
 }
 
+/* Social Google login button styling */
+.btn-social-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-social-google:hover {
+    background-color: #f8fafc;
+    border-color: #94a3b8;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Auth modal separator styling */
+.or-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 16px 0;
+}
+
+.or-separator::before,
+.or-separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.or-separator::before {
+    margin-right: 12px;
+}
+
+.or-separator::after {
+    margin-left: 12px;
+}
+
+.or-text {
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+
 

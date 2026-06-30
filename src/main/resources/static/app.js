@@ -154,12 +154,91 @@ function initAuthModule() {
     }
 }
 
+function setupGoogleIdentity() {
+    const btnGoogleLogin = document.getElementById('btn-google-login');
+    const googleNativeContainer = document.getElementById('g_id_signin');
+    
+    if (!state.googleClientId) return;
+    
+    // Check if the Client ID is configured with a real value
+    if (state.googleClientId.startsWith('YOUR_')) {
+        // Simulated local fallback
+        if (btnGoogleLogin) {
+            btnGoogleLogin.style.display = 'flex';
+            // Avoid duplicate listeners
+            btnGoogleLogin.replaceWith(btnGoogleLogin.cloneNode(true));
+            document.getElementById('btn-google-login').addEventListener('click', handleSimulatedGoogleLogin);
+        }
+        if (googleNativeContainer) googleNativeContainer.style.display = 'none';
+    } else {
+        // Real Google Identity Services popup
+        if (btnGoogleLogin) btnGoogleLogin.style.display = 'none';
+        if (googleNativeContainer) {
+            googleNativeContainer.style.display = 'flex';
+            
+            try {
+                google.accounts.id.initialize({
+                    client_id: state.googleClientId,
+                    callback: handleGoogleCredentialResponse
+                });
+                google.accounts.id.renderButton(
+                    googleNativeContainer,
+                    { theme: "outline", size: "large", width: 350 }
+                );
+            } catch (err) {
+                console.error("Google Identity Services render failed", err);
+            }
+        }
+    }
+}
+
+async function handleGoogleCredentialResponse(response) {
+    const credential = response.credential;
+    await postGoogleAuth(credential);
+}
+
+async function handleSimulatedGoogleLogin() {
+    const email = prompt("Enter simulated Google Email Address:", "anishraj@gmail.com");
+    if (!email) return;
+    
+    if (!email.includes('@') || email.length < 5) {
+        showToast("Please enter a valid email address", "error");
+        return;
+    }
+    
+    await postGoogleAuth(`mock-token:${email}`);
+}
+
+async function postGoogleAuth(credential) {
+    try {
+        const res = await fetch(`${API_BASE}/auth/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ credential })
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+            showToast(`Logged in successfully! Welcome, ${data.username}`, "success");
+            closeModal('modal-auth');
+            await checkAuthStatus();
+        } else {
+            showToast(data.error || "Google Authentication failed", "error");
+        }
+    } catch (e) {
+        showToast("Connection to Google login endpoint failed", "error");
+    }
+}
+
 function updateAuthModalUI() {
     const title = document.getElementById('auth-modal-title');
     const btn = document.getElementById('btn-submit-auth');
     const togglePrompt = document.getElementById('auth-toggle-prompt');
     const toggleLink = document.getElementById('link-toggle-auth');
     const errorMsg = document.getElementById('auth-error-msg');
+    const googleLoginContainer = document.getElementById('btn-google-login').parentNode;
+    const separator = document.querySelector('.or-separator');
     
     errorMsg.style.display = 'none';
     errorMsg.innerText = '';
@@ -169,15 +248,37 @@ function updateAuthModalUI() {
         btn.innerText = 'Sign In';
         togglePrompt.innerText = 'New to the platform?';
         toggleLink.innerText = 'Register Client';
+        
+        // Show google login for sign in mode only
+        googleLoginContainer.style.display = 'block';
+        separator.style.display = 'flex';
     } else {
         title.innerText = 'Register Client';
         btn.innerText = 'Register Account';
         togglePrompt.innerText = 'Already have an account?';
         toggleLink.innerText = 'Sign In';
+        
+        // Hide google login for manual client registrations
+        googleLoginContainer.style.display = 'none';
+        separator.style.display = 'none';
     }
 }
 
 async function checkAuthStatus() {
+    // Load Google OAuth Config once
+    if (!state.googleClientId) {
+        try {
+            const configRes = await fetch(`${API_BASE}/auth/config`);
+            if (configRes.ok) {
+                const configData = await configRes.json();
+                state.googleClientId = configData.googleClientId;
+                setupGoogleIdentity();
+            }
+        } catch (e) {
+            console.error("Failed to load Google OAuth config", e);
+        }
+    }
+    
     try {
         const res = await fetch(`${API_BASE}/auth/status`);
         if (!res.ok) throw new Error("Auth status failed");
