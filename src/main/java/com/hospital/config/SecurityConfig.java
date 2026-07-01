@@ -38,7 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/addDoctors/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/appointment/complete").hasRole("ADMIN")
                         .requestMatchers("/api/v1/reports/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/getAllAppointment").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/getAllAppointment").hasAnyRole("CLIENT", "ADMIN")
                         // Catch-all
                         .anyRequest().authenticated()
                 )
