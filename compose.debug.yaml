@@ -1,11 +1,38 @@
 services:
-  hospitalmanagementtest:
-    image: hospitalmanagementtest
+  db:
+    image: postgres:17-alpine
+    container_name: hospital_db_debug
+    environment:
+      POSTGRES_DB: hospital_management_test
+      POSTGRES_USER: anishraj
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_debug:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U anishraj -d hospital_management_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
     build:
       context: .
       dockerfile: ./Dockerfile
-    environment:
-      JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005,quiet=y
+    container_name: hospital_app_debug
     ports:
-      - 3000:3000
-      - 5005:5005
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/hospital_management_test
+      SPRING_DATASOURCE_USERNAME: anishraj
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data_debug:

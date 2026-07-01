@@ -171,6 +171,13 @@ function setupGoogleIdentity() {
         }
         if (googleNativeContainer) googleNativeContainer.style.display = 'none';
     } else {
+        // Safe check for GIS loading
+        if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+            console.log("Google Identity Services script not ready yet, retrying in 100ms...");
+            setTimeout(setupGoogleIdentity, 100);
+            return;
+        }
+
         // Real Google Identity Services popup
         if (btnGoogleLogin) btnGoogleLogin.style.display = 'none';
         if (googleNativeContainer) {

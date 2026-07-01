@@ -1,9 +1,14 @@
-FROM mcr.microsoft.com/openjdk/jdk:21-ubuntu
-VOLUME /tmp
-ARG JAVA_OPTS
-ENV JAVA_OPTS=$JAVA_OPTS
-COPY target/hospital-management-test-1.0-SNAPSHOT.jar hospitalmanagementtest.jar
-EXPOSE 3000
-ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar hospitalmanagementtest.jar"]
-# For Spring-Boot project, use the entrypoint below to reduce Tomcat startup time.
-#ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar hospitalmanagementtest.jar"]
+# Stage 1: Build compilation
+FROM maven:3.9.6-eclipse-temurin-21 AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src ./src
+RUN mvn package -DskipTests
+
+# Stage 2: Runtime image execution
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+COPY --from=build /app/target/hospital-management-test-1.0-SNAPSHOT.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
